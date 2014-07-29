@@ -1,0 +1,64 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		maven { url 'http://repo.springsource.org/plugins-release' }
+	}
+	dependencies {
+		classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
+		classpath 'com.github.samueltbrown:gradle-cucumber-plugin:0.7'
+	}
+}
+
+allprojects {
+	apply plugin: 'java'
+	apply plugin: 'groovy'
+	apply plugin: 'propdeps'
+
+
+	group = 'io.jdev.geb'
+	version = '0.1-SNAPSHOT'
+
+	repositories {
+		mavenCentral()
+	}
+
+
+	ext {
+		groovyVersion = "2.2.2"
+		gebVersion = '0.9.2'
+		seleniumVersion = "2.41.0"
+		spockVersion = "0.7-groovy-2.0"
+		cucumberJvmVersion = "1.1.8"
+
+		isSnapshot = version.endsWith("-SNAPSHOT")
+
+		publishedModules = [':miniprofiler-core', ':miniprofiler-test-support']
+	}
+
+	test {
+		testLogging.exceptionFormat = 'full'
+	}
+
+}
+
+// IDE support
+apply from: "./gradle/ide.gradle"
+
+
+dependencies {
+	provided "org.codehaus.groovy:groovy:$groovyVersion"
+	provided "org.gebish:geb-core:$gebVersion"
+	provided "info.cukes:cucumber-core:$cucumberJvmVersion"
+	provided "info.cukes:cucumber-java:$cucumberJvmVersion"
+	compile "io.jdev.cucumber:cucumber-variables:0.1"
+
+
+
+	testCompile "org.spockframework:spock-core:$spockVersion"
+
+	testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+	testCompile "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
+	testRuntime "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
+
+}
+
