@@ -22,35 +22,4 @@
  * THE SOFTWARE.
  */
 
-package io.jdev.geb.cucumber.steps.en
-
-import cucumber.api.Scenario
-import cucumber.api.java.After
-import cucumber.api.java.Before
-import cucumber.api.java.en.When
-import io.jdev.cucumber.variables.core.BasicSteps
-import io.jdev.cucumber.variables.en.EnglishDecoder
-import io.jdev.geb.cucumber.core.PageFinderSetup
-import io.jdev.geb.cucumber.core.en.PageFinderEN
-
-class PageSteps extends BasicSteps {
-
-	// cache this for the life of the cucumber process
-	@Lazy private static PageFinderEN = { new PageFinderEN(packageNames: PageFinderSetup.packageNames) }
-
-	@Before
-	public void before(Scenario scenario) {
-		super.before(scenario, new EnglishDecoder());
-	}
-
-	@After
-	public void after(Scenario scenario) {
-		super.after(scenario);
-	}
-
-	@When(/^I go to the (.*) (page|dialog)$/)
-	public void to(String pageName, String pageType) {
-
-	}
-
-}
+baseUrl = 'http://localhost:8080/integration-test/'

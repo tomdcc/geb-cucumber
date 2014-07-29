@@ -24,9 +24,6 @@
 
 package io.jdev.geb.cucumber.core.util
 
-import groovy.transform.CompileStatic
-
-@CompileStatic
 class NameUtil {
 
 	static String lowerCaseToProperCase(String src) {

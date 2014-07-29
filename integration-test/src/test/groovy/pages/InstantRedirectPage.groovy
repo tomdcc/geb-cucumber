@@ -22,39 +22,10 @@
  * THE SOFTWARE.
  */
 
-package io.jdev.geb.cucumber.core.en
+package pages
 
-import io.jdev.geb.cucumber.core.BasePageFinder
-import io.jdev.geb.cucumber.core.PageFinderSetup
-import io.jdev.geb.cucumber.core.util.NameUtil
+import geb.Page
 
-import java.util.regex.Matcher
-import java.util.regex.Pattern
-
-class PageFinderEN extends BasePageFinder {
-
-	static final Pattern PAGE_NAME_PATTERN = Pattern.compile("(.*) (page|dialog)")
-
-    private static PageFinderEN instance
-
-    public static PageFinderEN getInstance() {
-        if(!instance) {
-            instance = new PageFinderEN(packageNames: PageFinderSetup.packageNames)
-        }
-        instance
-    }
-
-	@Override
-	String pageNameToClassName(String pageName) {
-		if(!pageName) {
-			return null
-		}
-		pageName = pageName.toLowerCase()
-		Matcher m = PAGE_NAME_PATTERN.matcher(pageName)
-		if(!m.matches()) {
-			// this probably shouldn't happen
-			return null
-		}
-		return NameUtil.lowerCaseToProperCase(m.group(0))
-	}
+class InstantRedirectPage extends Page {
+    static url = 'redirect.jsp'
 }

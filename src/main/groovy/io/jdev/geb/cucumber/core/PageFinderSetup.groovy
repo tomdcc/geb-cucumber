@@ -24,9 +24,6 @@
 
 package io.jdev.geb.cucumber.core
 
-import groovy.transform.CompileStatic
-
-@CompileStatic
 class PageFinderSetup {
 
 	private static List<String> packageNames = null;

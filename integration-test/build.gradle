@@ -22,39 +22,39 @@
  * THE SOFTWARE.
  */
 
-package io.jdev.geb.cucumber.core.en
+apply plugin: 'war'
+apply plugin: 'jetty'
+apply plugin: "com.github.samueltbrown.cucumber"
 
-import io.jdev.geb.cucumber.core.BasePageFinder
-import io.jdev.geb.cucumber.core.PageFinderSetup
-import io.jdev.geb.cucumber.core.util.NameUtil
 
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+dependencies {
+    providedCompile 'javax.servlet:servlet-api:2.5'
 
-class PageFinderEN extends BasePageFinder {
+    testCompile "org.codehaus.groovy:groovy:$groovyVersion"
+    testCompile "org.gebish:geb-core:$gebVersion"
 
-	static final Pattern PAGE_NAME_PATTERN = Pattern.compile("(.*) (page|dialog)")
+    testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+    testCompile "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
+    testRuntime "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
 
-    private static PageFinderEN instance
+    cucumberCompile project(':')
+    cucumberCompile 'info.cukes:cucumber-groovy:1.1.8'
+}
 
-    public static PageFinderEN getInstance() {
-        if(!instance) {
-            instance = new PageFinderEN(packageNames: PageFinderSetup.packageNames)
-        }
-        instance
-    }
+// TODO: implement nicer way to do this, probably reading GebConfig
+task cucumberSetup << {
+    System.setProperty("geb.cucumber.step.packages", "pages")
+}
 
-	@Override
-	String pageNameToClassName(String pageName) {
-		if(!pageName) {
-			return null
-		}
-		pageName = pageName.toLowerCase()
-		Matcher m = PAGE_NAME_PATTERN.matcher(pageName)
-		if(!m.matches()) {
-			// this probably shouldn't happen
-			return null
-		}
-		return NameUtil.lowerCaseToProperCase(m.group(0))
-	}
+task jettyStart(type: JettyRun) {
+    daemon = true
+}
+
+cucumber.dependsOn ([':compileGroovy', jettyStart, cucumberSetup])
+check.dependsOn(cucumber)
+
+cucumber {
+    formats = ['asyougo']
+    glueDirs = ['classpath:io.jdev.geb.cucumber.steps.groovy.en']
+    featureDirs = ["$project.projectDir/src/cucumber/features".toString()]
 }
