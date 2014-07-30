@@ -28,7 +28,7 @@ import cucumber.api.Scenario
 import geb.Page
 import io.jdev.cucumber.variables.core.Decoder
 
-class BasicSteps extends StepsBase {
+class NavigationSteps extends StepsBase {
     PageFinder pageFinder
 
     public void before (Scenario scenario, Binding binding, PageFinder pageFinder, Decoder variableDecoder) {
@@ -58,5 +58,17 @@ class BasicSteps extends StepsBase {
         try {
             Thread.sleep(seconds * 1000)
         } catch(InterruptedException e) {}
+    }
+
+    public void go(String path) {
+        browser.go(path)
+    }
+
+    public void atPath(String path) {
+        URI uri = new URI(path)
+        if(!uri.absolute) {
+            uri = new URI(browser.baseUrl).resolve(uri)
+        }
+        assert browser.driver.currentUrl.equals(uri.toString())
     }
 }
