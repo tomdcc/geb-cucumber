@@ -32,13 +32,14 @@
         <label for="state">State: </label>
         <select id='state' name='state'>
             <option></option>
-            <option>ACT</option>
-            <option>NSW</option>
-            <option>NT</option>
-            <option>QLD</option>
-            <option>SA</option>
-            <option>VIC</option>
-            <option>WA</option>
+            <option value='1'>ACT</option>
+            <option value='2'>NSW</option>
+            <option value='3'>NT</option>
+            <option value='4'>QLD</option>
+            <option value='5'>TAS</option>
+            <option value='6'>SA</option>
+            <option value='7'>VIC</option>
+            <option value='8'>WA</option>
         </select>
     </div>
     <div>

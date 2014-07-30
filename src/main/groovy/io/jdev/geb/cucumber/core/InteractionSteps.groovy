@@ -5,6 +5,7 @@ import cucumber.api.Scenario
 import geb.Module
 import io.jdev.cucumber.variables.core.Decoder
 import io.jdev.geb.cucumber.core.util.TableUtil
+import io.jdev.geb.cucumber.core.util.ValueUtil
 
 class InteractionSteps extends StepsBase {
 
@@ -65,13 +66,14 @@ class InteractionSteps extends StepsBase {
         hasValue(field, value)
     }
 
-    private static void hasValue(def field, def value) {
-        if(value instanceof CheckedDecoder.CheckedState) {
+    private static void hasValue(def field, def expectedValue) {
+        if(expectedValue instanceof CheckedDecoder.CheckedState) {
             boolean isChecked = field.value() != false
-            boolean wantChecked = value == CheckedDecoder.CheckedState.checked
+            boolean wantChecked = expectedValue == CheckedDecoder.CheckedState.checked
             assert isChecked == wantChecked
         } else {
-            assert field.value() as String == value as String
+            String fieldValue = ValueUtil.getValue(field)
+            assert fieldValue == expectedValue as String
         }
     }
 
