@@ -8,5 +8,6 @@ class FormPage extends Page {
     static content = {
         nameField { $('input[name=name]') }
         favouriteLanguageField { $('select[name=favlang]') }
+        useGnatCheckbox { $('input[name=gnat]') }
     }
 }

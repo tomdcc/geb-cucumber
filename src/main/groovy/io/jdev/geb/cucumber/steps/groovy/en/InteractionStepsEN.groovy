@@ -28,3 +28,15 @@ When(~/^I (?:enter|select) (.*) in(?:to)? the (.* field)$/) { String value, Stri
 Then(~/^the (.* field) has (?:the )?value (?:of )?(.*)$/) { String fieldDesc, String value ->
     steps.hasValue(value, fieldDesc)
 }
+
+When(~/^I click (?:on )?the (.*)$/) { String fieldDesc ->
+    steps.click(fieldDesc)
+}
+
+Then(~/^the (.* (?:check)?box) is checked$/) { String fieldDesc->
+    steps.isChecked(fieldDesc)
+}
+
+Then(~/^the (.* (?:check)?box) is not checked$/) { String fieldDesc->
+    steps.isNotChecked(fieldDesc)
+}

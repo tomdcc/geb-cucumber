@@ -24,4 +24,17 @@ class InteractionSteps extends StepsBase {
         assert field.value() as String == value as String
     }
 
+    void click(String fieldDesc) {
+        def field = fieldFinder.findField(fieldDesc, browser.page)
+        field.click()
+    }
+
+    void isChecked(String fieldDesc) {
+        def field = fieldFinder.findField(fieldDesc, browser.page)
+        assert field.value() != false
+    }
+    void isNotChecked(String fieldDesc) {
+        def field = fieldFinder.findField(fieldDesc, browser.page)
+        assert field.value() == false
+    }
 }

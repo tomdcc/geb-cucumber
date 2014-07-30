@@ -16,6 +16,9 @@
         <option>Ada95</option>
     </select>
 </div>
+<div>
+    <label for="gnat">Use GNAT: </label> <input id='gnat' name='gnat' type='checkbox' value='usegnat'>
+</div>
 
 </body>
 </html>
