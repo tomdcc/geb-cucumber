@@ -30,12 +30,29 @@ When(~/^I go to the (.* (?:page|dialog)) with parameters:$/) { String pageName, 
     steps.to(pageName, dataTable)
 }
 
+When(~/^I go to the (.* (?:page|dialog)) for (the .*)$/) { String pageName, String paramName ->
+    println "steps.to($pageName, $paramName - 'the ', $paramName)"
+    steps.to(pageName, paramName - 'the ', paramName)
+}
+
+When(~/^I go to the (.* (?:page|dialog)) for (.*) of (.*)$/) { String pageName, String paramName, String paramValue ->
+    steps.to(pageName, paramName, paramValue)
+}
+
 When(~/^I go via the (.* (?:page|dialog))$/) { String pageName ->
     steps.via(pageName)
 }
 
 When(~/^I go via the (.* (?:page|dialog)) with parameters:$/) { String pageName, DataTable dataTable ->
     steps.via(pageName, dataTable)
+}
+
+When(~/^I go via the (.* (?:page|dialog)) for (.*) of (.*)$/) { String pageName, String paramName, String paramValue ->
+    steps.via(pageName, paramName, paramValue)
+}
+
+When(~/^I go via the (.* (?:page|dialog)) for (the .*)$/) { String pageName, String paramName ->
+    steps.to(pageName, paramName - 'the ', paramName)
 }
 
 Then(~/^I am at the (.* (?:page|dialog))$/) { String pageName ->

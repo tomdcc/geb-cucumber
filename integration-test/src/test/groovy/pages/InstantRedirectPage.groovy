@@ -28,4 +28,5 @@ import geb.Page
 
 class InstantRedirectPage extends Page {
     static url = 'redirect.jsp'
+    static Map paramNames = ['dog id': 'dog_id']
 }

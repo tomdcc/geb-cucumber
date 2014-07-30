@@ -30,6 +30,8 @@ import geb.Page
 import io.jdev.cucumber.variables.core.Decoder
 import io.jdev.geb.cucumber.core.util.TableUtil
 
+import java.lang.reflect.Modifier
+
 class NavigationSteps extends StepsBase {
     PageFinder pageFinder
 
@@ -44,6 +46,12 @@ class NavigationSteps extends StepsBase {
         browser.to(params, pageClass)
     }
 
+    public void to(String pageName, String niceParamName, String paramRawValue) {
+        Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
+        assert pageClass
+        browser.to(getNiceParams(pageClass, niceParamName, paramRawValue), pageClass)
+    }
+
     public void to(String path, DataTable dataTable) {
         to(path, tableToParams(dataTable))
     }
@@ -52,6 +60,12 @@ class NavigationSteps extends StepsBase {
         Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
         assert pageClass
         browser.via(params, pageClass)
+    }
+
+    public void via(String pageName, String niceParamName, String paramRawValue) {
+        Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
+        assert pageClass
+        browser.via(getNiceParams(pageClass, niceParamName, paramRawValue), pageClass)
     }
 
     public void via(String path, DataTable dataTable) {
@@ -95,6 +109,26 @@ class NavigationSteps extends StepsBase {
             uri = new URI(browser.baseUrl).resolve(uri)
         }
         uri.toString()
+    }
+
+    private static final String PARAM_NAMES_MAP_PROPERTY_NAME = 'paramNames'
+    private String getParamFromName(Class<? extends Page> pageClass, String paramDescriptiveName) {
+        MetaProperty prop = pageClass.metaClass.getMetaProperty(PARAM_NAMES_MAP_PROPERTY_NAME)
+        assert prop && Modifier.isStatic(prop.modifiers),
+                "Cannot look up parameter name $paramDescriptiveName on class $pageClass.name as it does not have a static $PARAM_NAMES_MAP_PROPERTY_NAME field"
+        def paramNameMap = pageClass[PARAM_NAMES_MAP_PROPERTY_NAME]
+        assert paramNameMap instanceof Map, "Cannot look up parameter name $paramDescriptiveName on class $pageClass.name as it the $PARAM_NAMES_MAP_PROPERTY_NAME field is not a java.util.Map"
+
+        String paramName = paramNameMap[paramDescriptiveName]
+        assert paramName, "Cannot look up parameter name $paramDescriptiveName on class $pageClass.name as it is not present in the $PARAM_NAMES_MAP_PROPERTY_NAME map"
+        paramName
+    }
+
+    private Map<String,Object> getNiceParams(Class<? extends Page> pageClass, String niceParamName, String paramRawValue) {
+        String paramName = getParamFromName(pageClass, niceParamName)
+        def paramValue = variableScope.decodeVariable(paramRawValue)
+        assert paramValue != null, "Could not find variable named $paramRawValue"
+        [(paramName): paramValue]
     }
 
 }

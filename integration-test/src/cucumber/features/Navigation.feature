@@ -57,3 +57,20 @@ Scenario: Redirect with params
     | 'hi there' | the dog name |
   Then I am at 'page2.jsp?greeting=hi+there&dogName=Max'
 
+Scenario: Page with single variable name
+  Given the dog id is set to '1'
+  When I go to the form page for the dog id
+  Then I am at 'form.jsp?dog_id=1'
+
+Scenario: Page with explicit nice parameter name
+  When I go to the form page for dog id of '1'
+  Then I am at 'form.jsp?dog_id=1'
+
+Scenario: Redirect with single variable name
+  Given the dog id is set to '1'
+  When I go via the instant redirect page for the dog id
+  Then I am at 'page2.jsp?dog_id=1'
+
+Scenario: Redirect with explicit nice parameter name
+  When I go via the instant redirect page for dog id of '1'
+  Then I am at 'page2.jsp?dog_id=1'
