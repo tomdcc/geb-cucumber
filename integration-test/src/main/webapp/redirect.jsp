@@ -22,4 +22,12 @@
   ~ THE SOFTWARE.
   --%>
 
-<% response.sendRedirect("/integration-test/page2.jsp"); %>
+<%
+    String queryString = request.getQueryString();
+    if(queryString == null) {
+        queryString = "";
+    } else {
+        queryString = "?" + queryString;
+    }
+    response.sendRedirect("/integration-test/page2.jsp" + queryString);
+%>

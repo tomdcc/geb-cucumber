@@ -55,7 +55,10 @@ check.dependsOn(cucumber)
 
 cucumber {
     formats = ['asyougo']
-    glueDirs = ['classpath:io.jdev.geb.cucumber.steps.groovy.en']
+    glueDirs = [
+        'classpath:io.jdev.geb.cucumber.steps.groovy.en',
+        'classpath:io.jdev.cucumber.variables.groovy.en'
+    ]
     featureDirs = ["$project.projectDir/src/cucumber/features".toString()]
     if(project.hasProperty('cucumberTags')) {
         tags = cucumberTags.split(",") as List

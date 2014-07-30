@@ -24,9 +24,11 @@
 
 package io.jdev.geb.cucumber.core
 
+import cucumber.api.DataTable
 import cucumber.api.Scenario
 import geb.Page
 import io.jdev.cucumber.variables.core.Decoder
+import io.jdev.geb.cucumber.core.util.TableUtil
 
 class NavigationSteps extends StepsBase {
     PageFinder pageFinder
@@ -36,16 +38,24 @@ class NavigationSteps extends StepsBase {
         this.pageFinder = pageFinder
     }
 
-    public void to(String pageName) {
+    public void to(String pageName, Map params = [:]) {
         Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
         assert pageClass
-        browser.to pageClass
+        browser.to(params, pageClass)
     }
 
-    public void via(String pageName) {
+    public void to(String path, DataTable dataTable) {
+        to(path, tableToParams(dataTable))
+    }
+
+    public void via(String pageName, Map params = [:]) {
         Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
         assert pageClass
-        browser.via pageClass
+        browser.via(params, pageClass)
+    }
+
+    public void via(String path, DataTable dataTable) {
+        via(path, tableToParams(dataTable))
     }
 
     public void at(String pageName) {
@@ -60,15 +70,31 @@ class NavigationSteps extends StepsBase {
         } catch(InterruptedException e) {}
     }
 
-    public void go(String path) {
-        browser.go(path)
+    public void go(String path, Map params = [:]) {
+        browser.go(params, path)
+    }
+
+    public void go(String path, DataTable dataTable) {
+        Map<String,Object> params = tableToParams(dataTable)
+        browser.go(params, path)
+    }
+
+    private Map<String,Object> tableToParams(DataTable dataTable) {
+        assert dataTable.cells(0).size() == 2, "must specify exactly one row for parameters"
+        TableUtil.dataTableToMaps(variableScope, dataTable).first()
     }
 
     public void atPath(String path) {
+        String expectedUrl = buildUrl(path)
+        assert browser.driver.currentUrl == expectedUrl
+    }
+
+    private String buildUrl(String path) {
         URI uri = new URI(path)
         if(!uri.absolute) {
             uri = new URI(browser.baseUrl).resolve(uri)
         }
-        assert browser.driver.currentUrl.equals(uri.toString())
+        uri.toString()
     }
+
 }
