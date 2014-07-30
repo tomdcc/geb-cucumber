@@ -43,3 +43,16 @@ Scenario: Enter values into module fields using table syntax
   Then the address section has the following values:
     | street address     | city        | state | postcode | registered mail only |
     | '39 George Street' | 'Thebarton' | 'SA'  | '5031'   | checked              |
+
+Scenario: Verify generic content
+  When I go to the home page with parameters:
+    | greeting   |
+    | 'hi there' |
+  Then the greeting is present
+  Then the greeting has value 'hi there'
+  Then the greeting field has value 'hi there'
+  And the greeting string label has value 'hi there'
+
+Scenario: Not present content
+  When I go to the home page
+  Then the greeting is not present

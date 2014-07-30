@@ -19,7 +19,7 @@ class InteractionSteps extends StepsBase {
     void enter(String rawValue, String fieldDesc) {
         def value = variableScope.decodeVariable(rawValue)
         def field = fieldFinder.findField(fieldDesc, browser.page)
-        enterValue(field, value)
+        ValueUtil.enterValue(field, value)
     }
 
     void enterValues(String fieldDesc, DataTable dataTable) {
@@ -44,38 +44,16 @@ class InteractionSteps extends StepsBase {
         for(Map.Entry<String,Object> entry : vals) {
             String fieldName = entry.key
             def field = fieldFinder.findField(fieldName, target)
-            enterValue(field, entry.value)
-        }
-    }
-
-    private void enterValue(def field, def value) {
-        if(value instanceof CheckedDecoder.CheckedState) {
-            boolean isChecked = field.value() != false
-            boolean wantChecked = value == CheckedDecoder.CheckedState.checked
-            if(isChecked != wantChecked) {
-                field.click()
-            }
-        } else {
-            field.value(value)
+            ValueUtil.enterValue(field, entry.value)
         }
     }
 
     void hasValue(String rawValue, String fieldDesc) {
         def value = variableScope.decodeVariable(rawValue)
         def field = fieldFinder.findField(fieldDesc, browser.page)
-        hasValue(field, value)
+        ValueUtil.hasValue(field, value)
     }
 
-    private static void hasValue(def field, def expectedValue) {
-        if(expectedValue instanceof CheckedDecoder.CheckedState) {
-            boolean isChecked = field.value() != false
-            boolean wantChecked = expectedValue == CheckedDecoder.CheckedState.checked
-            assert isChecked == wantChecked
-        } else {
-            String fieldValue = ValueUtil.getValue(field)
-            assert fieldValue == expectedValue as String
-        }
-    }
 
     void hasValues(String fieldDesc, DataTable dataTable) {
         def target = getOptionalTarget(fieldDesc)
@@ -88,7 +66,7 @@ class InteractionSteps extends StepsBase {
         for(Map.Entry<String,Object> entry : vals) {
             String fieldName = entry.key
             def field = fieldFinder.findField(fieldName, target)
-            hasValue(field, entry.value)
+            ValueUtil.hasValue(field, entry.value)
         }
     }
 
@@ -101,8 +79,20 @@ class InteractionSteps extends StepsBase {
         def field = fieldFinder.findField(fieldDesc, browser.page)
         assert field.value() != false
     }
+
     void isNotChecked(String fieldDesc) {
         def field = fieldFinder.findField(fieldDesc, browser.page)
         assert field.value() == false
     }
+
+    void isPresent(String fieldDesc) {
+        def field = fieldFinder.findField(fieldDesc, browser.page)
+        assert field
+    }
+
+    void isNotPresent(String fieldDesc) {
+        def field = fieldFinder.findField(fieldDesc, browser.page)
+        assert !field
+    }
+
 }

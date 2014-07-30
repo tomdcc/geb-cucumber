@@ -29,5 +29,13 @@
 </head>
 <body>
     <h1>Home Page</h1>
+    <%
+        String greeting = request.getParameter("greeting");
+        if(greeting != null) {
+            %>
+                <div id='greeting'><%= greeting %></div>
+            <%
+        }
+    %>
 </body>
 </html>

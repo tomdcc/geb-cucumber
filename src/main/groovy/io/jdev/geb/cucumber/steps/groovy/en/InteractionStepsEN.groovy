@@ -34,8 +34,16 @@ When(~/^I enter the following values in(?:to)? the (.*) section:$/) { String fie
     steps.enterValues(fieldDesc, dataTable)
 }
 
-Then(~/^the (.*) field has (?:the )?value (?:of )?(.*)$/) { String fieldDesc, String value ->
+Then(~/^the (.*?)(?: field| label)? has (?:the )?value (?:of )?(.*)$/) { String fieldDesc, String value ->
     steps.hasValue(value, fieldDesc)
+}
+
+Then(~/^the (.*?)(?: field| label)? is present$/) { String fieldDesc ->
+    steps.isPresent(fieldDesc)
+}
+
+Then(~/^the (.*?)(?: field| label)? is not present$/) { String fieldDesc ->
+    steps.isNotPresent(fieldDesc)
 }
 
 When(~/^I click (?:on )?the (.*?)(?: checkbox| box)?$/) { String fieldDesc ->

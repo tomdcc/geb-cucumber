@@ -26,17 +26,48 @@ package io.jdev.geb.cucumber.core.util
 
 import geb.content.SimplePageContent
 import geb.navigator.Navigator
+import io.jdev.geb.cucumber.core.CheckedDecoder
 import org.openqa.selenium.support.ui.Select
 
 class ValueUtil {
 
     static String getValue(def field) {
-        if((field instanceof Navigator && field.is('select')) || (field instanceof SimplePageContent && field.navigator.is('select'))) {
+        if(field instanceof String) {
+            // someone calling text() in their geb content definition
+            field
+        } else if((field instanceof Navigator && field.is('select')) || (field instanceof SimplePageContent && field.navigator.is('select'))) {
             // get the text for the selected option, rather than its id value
             new Select(field.getElement(0)).firstSelectedOption.text.trim()
         } else {
             def value = field.value()
-            value.trim()
+            if(!value) {
+                // maybe a plain div rather than input field
+                value = field.text()
+            }
+            value?.trim()
+        }
+    }
+
+    static void hasValue(def field, def expectedValue) {
+        if(expectedValue instanceof CheckedDecoder.CheckedState) {
+            boolean isChecked = field.value() != false
+            boolean wantChecked = expectedValue == CheckedDecoder.CheckedState.checked
+            assert isChecked == wantChecked
+        } else {
+            String fieldValue = getValue(field)
+            assert fieldValue == expectedValue as String
+        }
+    }
+
+    static void enterValue(def field, def value) {
+        if(value instanceof CheckedDecoder.CheckedState) {
+            boolean isChecked = field.value() != false
+            boolean wantChecked = value == CheckedDecoder.CheckedState.checked
+            if(isChecked != wantChecked) {
+                field.click()
+            }
+        } else {
+            field.value(value)
         }
     }
 

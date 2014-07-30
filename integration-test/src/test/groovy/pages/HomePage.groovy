@@ -29,4 +29,8 @@ import geb.Page
 class HomePage extends Page {
     static at = { title == 'Test app home page' }
     static url = ''
+    static content = {
+        greeting(required: false) { $('#greeting') }
+        greetingString(required: false) { $('#greeting')?.text() }
+    }
 }
