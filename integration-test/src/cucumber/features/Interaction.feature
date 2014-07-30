@@ -49,10 +49,18 @@ Scenario: Verify generic content
     | greeting   |
     | 'hi there' |
   Then the greeting is present
-  Then the greeting has value 'hi there'
-  Then the greeting field has value 'hi there'
+  And the greeting is visible
+  And the greeting has value 'hi there'
+  And the greeting field has value 'hi there'
   And the greeting string label has value 'hi there'
 
 Scenario: Not present content
   When I go to the home page
   Then the greeting is not present
+
+Scenario: Hidden content
+  When I go to the home page with parameters:
+      | greeting   | greetingHidden |
+      | 'hi there' | 'true'         |
+    Then the greeting is present
+    And the greeting is not visible

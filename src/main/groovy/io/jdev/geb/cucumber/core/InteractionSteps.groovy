@@ -95,4 +95,13 @@ class InteractionSteps extends StepsBase {
         assert !field
     }
 
+    void isVisible(String fieldDesc) {
+        def field = fieldFinder.findField(fieldDesc, browser.page)
+        field.displayed
+    }
+
+    void isNotVisible(String fieldDesc) {
+        def field = fieldFinder.findField(fieldDesc, browser.page)
+        field.displayed
+    }
 }

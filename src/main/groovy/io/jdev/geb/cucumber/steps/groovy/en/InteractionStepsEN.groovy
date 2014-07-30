@@ -46,6 +46,14 @@ Then(~/^the (.*?)(?: field| label)? is not present$/) { String fieldDesc ->
     steps.isNotPresent(fieldDesc)
 }
 
+Then(~/^the (.*?)(?: field| label)? is visible/) { String fieldDesc ->
+    steps.isVisible(fieldDesc)
+}
+
+Then(~/^the (.*?)(?: field| label)? is not visible/) { String fieldDesc ->
+    steps.isNotVisible(fieldDesc)
+}
+
 When(~/^I click (?:on )?the (.*?)(?: checkbox| box)?$/) { String fieldDesc ->
     steps.click(fieldDesc)
 }
