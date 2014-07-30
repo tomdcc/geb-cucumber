@@ -7,5 +7,6 @@ class FormPage extends Page {
     static at = { title == 'Form page' }
     static content = {
         nameField { $('input[name=name]') }
+        favouriteLanguageField { $('select[name=favlang]') }
     }
 }
