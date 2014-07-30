@@ -34,10 +34,16 @@ import java.lang.reflect.Modifier
 
 class NavigationSteps extends StepsBase {
     PageFinder pageFinder
+    String mainWindowHandle
 
     public void before (Scenario scenario, Binding binding, PageFinder pageFinder, Decoder variableDecoder) {
         super.before(scenario, binding, variableDecoder)
         this.pageFinder = pageFinder
+    }
+
+    public void after(Scenario scenario) {
+        super.after(scenario)
+        cleanupWindows()
     }
 
     public void to(String pageName, Map params = [:]) {
@@ -131,4 +137,52 @@ class NavigationSteps extends StepsBase {
         [(paramName): paramValue]
     }
 
+    public void assertPopup() {
+        println "assertPopup, windowHandles: $browser.driver.windowHandles, current windowHandle: $browser.driver.windowHandle"
+        if(mainWindowHandle && mainWindowHandle != browser.driver.windowHandle) {
+            throw new IllegalStateException("Previous main window handle set but doesn't match current window handle - nested popups not currently supported")
+        }
+        mainWindowHandle = browser.driver.windowHandle
+        browser.waitFor { browser.driver.windowHandles.size() > 1 }
+    }
+
+    public void switchToPopup(String pageName) {
+        assertPopup()
+        def newWindowHandle = browser.driver.windowHandles.find { it != mainWindowHandle }
+        browser.driver.switchTo().window(newWindowHandle)
+        if(pageName) {
+            at(pageName)
+        }
+    }
+
+    public void popupClosed() {
+        browser.driver.switchTo().window(mainWindowHandle)
+        browser.waitFor { browser.driver.windowHandles.size() == 1 }
+    }
+
+    public void closePopup() {
+        println "closePopup, windowHandles: $browser.driver.windowHandles, current windowHandle: $browser.driver.windowHandle"
+        // just playing it safe
+        if(!mainWindowHandle) {
+            mainWindowHandle = browser.driver.windowHandle
+        }
+        if(mainWindowHandle == browser.driver.windowHandle) {
+            // select the window which isn't the main one
+            String otherHandle = browser.driver.windowHandles.find { it != mainWindowHandle }
+            assert otherHandle, "Could not find other window to close"
+            browser.driver.switchTo().window(otherHandle)
+        }
+        browser.driver.close()
+        browser.driver.switchTo().window(mainWindowHandle)
+    }
+
+    private cleanupWindows() {
+        if(mainWindowHandle && browser.driver.windowHandles.size() > 1) {
+            browser.driver.windowHandles.findAll { it != mainWindowHandle } .each { handle ->
+                browser.driver.switchTo().window(handle).close()
+            }
+            browser.driver.switchTo().window(mainWindowHandle)
+        }
+        mainWindowHandle = null
+    }
 }

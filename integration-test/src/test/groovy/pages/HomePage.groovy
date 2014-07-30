@@ -32,5 +32,6 @@ class HomePage extends Page {
     static content = {
         greeting(required: false) { $('#greeting') }
         greetingString(required: false) { $('#greeting')?.text() }
+        popupButton { $('#popupButton') }
     }
 }

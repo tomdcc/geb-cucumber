@@ -74,3 +74,26 @@ Scenario: Redirect with single variable name
 Scenario: Redirect with explicit nice parameter name
   When I go via the instant redirect page for dog id of '1'
   Then I am at 'page2.jsp?dog_id=1'
+
+Scenario: Popups can be closed without switching to them
+  When I go to the home page
+  And I click on the popup button
+  Then another window has popped up
+  When I close the popped up window
+  Then I am at the home page
+
+Scenario: Popups can be closed after switching to them
+  When I go to the home page
+  And I click on the popup button
+  Then another window has popped up
+  When I switch to the popped up window
+  And I close the popped up window
+  Then I am at the home page
+
+Scenario: Popups can be closed by interaction
+  When I go to the home page
+  And I click on the popup button
+  Then the second page has popped up
+  When I click the close button
+  Then the popped up window has closed
+  And I am at the home page

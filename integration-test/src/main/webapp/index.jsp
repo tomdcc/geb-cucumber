@@ -39,5 +39,7 @@
             <%
         }
     %>
+
+<div><input type='button' id='popupButton' onclick="window.open('<%= request.getContextPath()%>/page2.jsp')" value="Popup window"></div>
 </body>
 </html>

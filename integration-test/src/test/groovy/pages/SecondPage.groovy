@@ -29,4 +29,7 @@ import geb.Page
 class SecondPage extends Page {
     static at = { title == 'Test app page 2' }
     static url = 'page2.jsp'
+    static content = {
+        closeButton { $('#closeButton') }
+    }
 }

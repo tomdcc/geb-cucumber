@@ -75,3 +75,22 @@ Then(~/^I am at '(.*)'$/) { String path ->
     steps.atPath(path)
 }
 
+Then(~/^another window has popped up$/) { ->
+    steps.assertPopup()
+}
+
+When(~/I switch to the popped up window/) { ->
+    steps.switchToPopup(null)
+}
+
+Then(~/^the (.* (?:page|dialog)) has popped up$/) { String pageName ->
+    steps.switchToPopup(pageName)
+}
+
+When(~/I close the popped up window/) { ->
+    steps.closePopup()
+}
+
+Then(~/the popped up window has closed/) { ->
+    steps.popupClosed()
+}

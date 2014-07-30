@@ -29,5 +29,6 @@
 </head>
 <body>
     <h1>Page 2</h1>
+    <div><input type='button' id='closeButton' onclick="window.close()" value="Close window"></div>
 </body>
 </html>
