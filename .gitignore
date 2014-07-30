@@ -2,3 +2,5 @@
 *.ipr
 *.iws
 build/
+.gradle/
+out/

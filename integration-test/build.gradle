@@ -57,4 +57,7 @@ cucumber {
     formats = ['asyougo']
     glueDirs = ['classpath:io.jdev.geb.cucumber.steps.groovy.en']
     featureDirs = ["$project.projectDir/src/cucumber/features".toString()]
+    if(project.hasProperty('cucumberTags')) {
+        tags = cucumberTags.split(",") as List
+    }
 }

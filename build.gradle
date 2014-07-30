@@ -83,9 +83,15 @@ dependencies {
     }
 
 	testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
-	testCompile "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
+	provided "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
 	testRuntime "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
 
+}
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
 }
 
 allprojects {
