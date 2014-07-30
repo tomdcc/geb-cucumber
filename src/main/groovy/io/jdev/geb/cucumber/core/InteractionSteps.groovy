@@ -1,7 +1,10 @@
 package io.jdev.geb.cucumber.core
 
+import cucumber.api.DataTable
 import cucumber.api.Scenario
+import geb.Module
 import io.jdev.cucumber.variables.core.Decoder
+import io.jdev.geb.cucumber.core.util.TableUtil
 
 class InteractionSteps extends StepsBase {
 
@@ -15,13 +18,76 @@ class InteractionSteps extends StepsBase {
     void enter(String rawValue, String fieldDesc) {
         def value = variableScope.decodeVariable(rawValue)
         def field = fieldFinder.findField(fieldDesc, browser.page)
-        field.value(value)
+        enterValue(field, value)
+    }
+
+    void enterValues(String fieldDesc, DataTable dataTable) {
+        def target = getOptionalTarget(fieldDesc)
+        List<Map<String,Object>> vals = TableUtil.dataTableToMaps(variableScope, dataTable, false)
+        assert vals.size() == 1, "Cannot enter more than 1 row when entering multiple values"
+        enterValues(target, vals.first())
+    }
+
+    private def getOptionalTarget(String fieldDesc) {
+        def target
+        if(fieldDesc) {
+            target = fieldFinder.findField(fieldDesc, browser.page)
+            assert target instanceof Module, "$fieldDesc is not a module, but you cannot enter multiple values into non-modules"
+        } else {
+            target = browser.page
+        }
+        target
+    }
+
+    private void enterValues(def target, Map<String,Object> vals) {
+        for(Map.Entry<String,Object> entry : vals) {
+            String fieldName = entry.key
+            def field = fieldFinder.findField(fieldName, target)
+            enterValue(field, entry.value)
+        }
+    }
+
+    private void enterValue(def field, def value) {
+        if(value instanceof CheckedDecoder.CheckedState) {
+            boolean isChecked = field.value() != false
+            boolean wantChecked = value == CheckedDecoder.CheckedState.checked
+            if(isChecked != wantChecked) {
+                field.click()
+            }
+        } else {
+            field.value(value)
+        }
     }
 
     void hasValue(String rawValue, String fieldDesc) {
         def value = variableScope.decodeVariable(rawValue)
         def field = fieldFinder.findField(fieldDesc, browser.page)
-        assert field.value() as String == value as String
+        hasValue(field, value)
+    }
+
+    private static void hasValue(def field, def value) {
+        if(value instanceof CheckedDecoder.CheckedState) {
+            boolean isChecked = field.value() != false
+            boolean wantChecked = value == CheckedDecoder.CheckedState.checked
+            assert isChecked == wantChecked
+        } else {
+            assert field.value() as String == value as String
+        }
+    }
+
+    void hasValues(String fieldDesc, DataTable dataTable) {
+        def target = getOptionalTarget(fieldDesc)
+        List<Map<String,Object>> vals = TableUtil.dataTableToMaps(variableScope, dataTable, false)
+        assert vals.size() == 1, "Cannot enter more than 1 row when verifying multiple values"
+        hasValues(target, vals.first())
+    }
+
+    private void hasValues(def target, Map<String,Object> vals) {
+        for(Map.Entry<String,Object> entry : vals) {
+            String fieldName = entry.key
+            def field = fieldFinder.findField(fieldName, target)
+            hasValue(field, entry.value)
+        }
     }
 
     void click(String fieldDesc) {

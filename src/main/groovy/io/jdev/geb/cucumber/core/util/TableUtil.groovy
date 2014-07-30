@@ -7,9 +7,12 @@ import io.jdev.cucumber.variables.VariableScope
 
 class TableUtil {
 
-    static List<Map<String,Object>> dataTableToMaps(VariableScope variables, DataTable table) {
+    static List<Map<String,Object>> dataTableToMaps(VariableScope variables, DataTable table, boolean convertKeys = true) {
         List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>()
-        List<String> keys = table.topCells().collect { lowerCaseToCamelCase(it) }
+        List<String> keys = table.topCells()
+        if(convertKeys) {
+            keys = keys.collect { lowerCaseToCamelCase(it) }
+        }
         for(List<String> tableRow : table.cells(1)) {
             Map<String,Object> resultRow = new LinkedHashMap<String,Object>()
             for(int i = 0; i < tableRow.size(); i++) {

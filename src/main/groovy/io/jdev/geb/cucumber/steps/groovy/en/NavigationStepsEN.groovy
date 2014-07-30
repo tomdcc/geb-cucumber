@@ -1,9 +1,9 @@
 package io.jdev.geb.cucumber.steps.groovy.en
 
 import cucumber.api.DataTable
-import io.jdev.cucumber.variables.en.EnglishDecoder
 import io.jdev.geb.cucumber.core.NavigationSteps
 import io.jdev.geb.cucumber.core.en.PageFinderEN
+import io.jdev.geb.cucumber.core.en.WebEnglishDecoder
 
 import static cucumber.api.groovy.Hooks.Before
 import static cucumber.api.groovy.Hooks.After
@@ -15,7 +15,7 @@ import cucumber.api.Scenario
 NavigationSteps steps = new NavigationSteps()
 
 Before { Scenario scenario ->
-    steps.before(scenario, binding, PageFinderEN.instance, new EnglishDecoder())
+    steps.before(scenario, binding, PageFinderEN.instance, new WebEnglishDecoder())
 }
 
 After { Scenario scenario ->
