@@ -26,7 +26,7 @@ class InteractionSteps extends StepsBase {
         def target = getOptionalTarget(fieldDesc)
         List<Map<String,Object>> vals = TableUtil.dataTableToMaps(variableScope, dataTable, false)
         assert vals.size() == 1, "Cannot enter more than 1 row when entering multiple values"
-        enterValues(target, vals.first())
+        enterTargetValues(target, vals.first())
     }
 
     private def getOptionalTarget(String fieldDesc) {
@@ -40,7 +40,7 @@ class InteractionSteps extends StepsBase {
         target
     }
 
-    private void enterValues(def target, Map<String,Object> vals) {
+    private void enterTargetValues(def target, Map<String,Object> vals) {
         for(Map.Entry<String,Object> entry : vals) {
             String fieldName = entry.key
             def field = fieldFinder.findField(fieldName, target)
@@ -59,10 +59,10 @@ class InteractionSteps extends StepsBase {
         def target = getOptionalTarget(fieldDesc)
         List<Map<String,Object>> vals = TableUtil.dataTableToMaps(variableScope, dataTable, false)
         assert vals.size() == 1, "Cannot enter more than 1 row when verifying multiple values"
-        hasValues(target, vals.first())
+        targetHasValues(target, vals.first())
     }
 
-    private void hasValues(def target, Map<String,Object> vals) {
+    private void targetHasValues(def target, Map<String,Object> vals) {
         for(Map.Entry<String,Object> entry : vals) {
             String fieldName = entry.key
             def field = fieldFinder.findField(fieldName, target)
