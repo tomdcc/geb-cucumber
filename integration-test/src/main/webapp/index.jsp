@@ -41,5 +41,9 @@
     %>
 
 <div><input type='button' id='popupButton' onclick="window.open('<%= request.getContextPath()%>/page2.jsp')" value="Popup window"></div>
+<div><input type='button' id='alertButton' onclick="alert('Click OK')" value="Alert"></div>
+<div><input type='button' id='confirmButton' onclick="document.getElementById('alertResult').innerHTML = confirm('Click OK or Cancel')" value="Confirm"></div>
+<div><input type='button' id='promptButton' onclick="document.getElementById('alertResult').innerHTML = prompt('Type something')" value="Prompt"></div>
+<div>Alert result: <span id="alertResult"></span></div>
 </body>
 </html>

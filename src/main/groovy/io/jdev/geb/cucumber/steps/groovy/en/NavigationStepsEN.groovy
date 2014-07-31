@@ -59,7 +59,7 @@ Then(~/^I am at the (.* (?:page|dialog))$/) { String pageName ->
     steps.at(pageName)
 }
 
-When(~/I pause for (\d+) seconds?/) { int seconds ->
+When(~/^I pause for (\d+) seconds?$/) { int seconds ->
     steps.pause(seconds)
 }
 
@@ -79,7 +79,7 @@ Then(~/^another window has popped up$/) { ->
     steps.assertPopup()
 }
 
-When(~/I switch to the popped up window/) { ->
+When(~/^I switch to the popped up window$/) { ->
     steps.switchToPopup(null)
 }
 
@@ -87,10 +87,30 @@ Then(~/^the (.* (?:page|dialog)) has popped up$/) { String pageName ->
     steps.switchToPopup(pageName)
 }
 
-When(~/I close the popped up window/) { ->
+When(~/^I close the popped up window$/) { ->
     steps.closePopup()
 }
 
-Then(~/the popped up window has closed/) { ->
+Then(~/^the popped up window has closed$/) { ->
     steps.popupClosed()
+}
+
+Then(~/^an alert box has popped up$/) { ->
+    steps.hasAlert(null)
+}
+
+Then(~/^an alert box with message (.*) has popped up$/) { String message ->
+    steps.hasAlert(message)
+}
+
+When(~/^I accept the alert box$/) { ->
+    steps.acceptAlert()
+}
+
+When(~/^I dismiss the alert box$/) { ->
+    steps.dismissAlert()
+}
+
+When(~/^I type (.*) into the alert box$/) { String text ->
+    steps.enterAlertPrompt(text)
 }

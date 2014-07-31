@@ -29,12 +29,15 @@ import cucumber.api.Scenario
 import geb.Page
 import io.jdev.cucumber.variables.core.Decoder
 import io.jdev.geb.cucumber.core.util.TableUtil
+import org.openqa.selenium.Alert
+import org.openqa.selenium.NoAlertPresentException
 
 import java.lang.reflect.Modifier
 
 class NavigationSteps extends StepsBase {
     PageFinder pageFinder
     String mainWindowHandle
+    Alert currentAlert
 
     public void before (Scenario scenario, Binding binding, PageFinder pageFinder, Decoder variableDecoder) {
         super.before(scenario, binding, variableDecoder)
@@ -138,7 +141,6 @@ class NavigationSteps extends StepsBase {
     }
 
     public void assertPopup() {
-        println "assertPopup, windowHandles: $browser.driver.windowHandles, current windowHandle: $browser.driver.windowHandle"
         if(mainWindowHandle && mainWindowHandle != browser.driver.windowHandle) {
             throw new IllegalStateException("Previous main window handle set but doesn't match current window handle - nested popups not currently supported")
         }
@@ -161,7 +163,6 @@ class NavigationSteps extends StepsBase {
     }
 
     public void closePopup() {
-        println "closePopup, windowHandles: $browser.driver.windowHandles, current windowHandle: $browser.driver.windowHandle"
         // just playing it safe
         if(!mainWindowHandle) {
             mainWindowHandle = browser.driver.windowHandle
@@ -177,6 +178,12 @@ class NavigationSteps extends StepsBase {
     }
 
     private cleanupWindows() {
+        if(currentAlert) {
+            try {
+                currentAlert.dismiss()
+            } catch(NoAlertPresentException e) { }
+            currentAlert = null
+        }
         if(mainWindowHandle && browser.driver.windowHandles.size() > 1) {
             browser.driver.windowHandles.findAll { it != mainWindowHandle } .each { handle ->
                 browser.driver.switchTo().window(handle).close()
@@ -184,5 +191,28 @@ class NavigationSteps extends StepsBase {
             browser.driver.switchTo().window(mainWindowHandle)
         }
         mainWindowHandle = null
+    }
+
+    public void hasAlert(String rawAlertMessage) {
+        currentAlert = browser.waitFor { browser.driver.switchTo().alert() }
+        if(rawAlertMessage) {
+            String expectedAlertMessage = variableScope.decodeVariable(rawAlertMessage) as String
+            assert currentAlert.text == expectedAlertMessage
+        }
+    }
+
+    public void enterAlertPrompt(String value) {
+        assert currentAlert
+        currentAlert.sendKeys(variableScope.decodeVariable(value) as String)
+    }
+
+    public void dismissAlert() {
+        currentAlert.dismiss()
+        currentAlert = null
+    }
+
+    public void acceptAlert() {
+        currentAlert.accept()
+        currentAlert = null
     }
 }

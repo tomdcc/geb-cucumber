@@ -33,5 +33,9 @@ class HomePage extends Page {
         greeting(required: false) { $('#greeting') }
         greetingString(required: false) { $('#greeting')?.text() }
         popupButton { $('#popupButton') }
+        alertButton { $('#alertButton') }
+        confirmButton { $('#confirmButton') }
+        promptButton { $('#promptButton') }
+        alertResult { $('#alertResult') }
     }
 }
