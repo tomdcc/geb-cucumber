@@ -79,7 +79,7 @@ dependencies {
 	provided "info.cukes:cucumber-groovy:$cucumberJvmVersion"
     provided "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
     provided "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
-	compile "io.jdev.cucumber:cucumber-variables:0.2-SNAPSHOT"
+	compile "io.jdev.cucumber:cucumber-variables:0.2"
 
 
 
