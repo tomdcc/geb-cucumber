@@ -23,7 +23,8 @@
 
 <div id='address'>
     <div>
-        <label for="streetAddress">Street address: </label> <input id='streetAddress' name='streetAddress'>
+        <label for="streetAddress">Street address: </label>
+        <textarea id='streetAddress' name='streetAddress'></textarea>
     </div>
     <div>
         <label for="city">City: </label> <input id='city' name='city'>

@@ -2,7 +2,7 @@ Feature: Interaction features
 
 Scenario: Enter values into basic fields
   When I go to the form page
-  Then the name field has the value of 'Ada Lovelace'
+  Then the name field has the value of "Ada Lovelace"
   And the favourite language field has value ''
   And the use gnat checkbox is not checked
   When I enter 'foo' into the name field
@@ -30,9 +30,9 @@ Scenario: Enter values into direct page fields using table syntax
 Scenario: Enter values into module fields using table syntax
   When I go to the form page
   When I enter the following values into the address section:
-    | street address   | city      | state | postcode | registered mail only |
-    | '4 Woods Street' | 'Norwood' | 'SA'  | '5067'   | unchecked            |
-  Then the address section street address field has value '4 Woods Street'
+    | street address                 | city      | state | postcode | registered mail only |
+    | 'Norwood Oval\n4 Woods Street' | 'Norwood' | 'SA'  | '5067'   | unchecked            |
+  Then the address section street address field has value 'Norwood Oval\n4 Woods Street'
   Then the address section city field has value 'Norwood'
   Then the address section state field has value 'SA'
   Then the address section postcode field matches /\d{4}/
@@ -60,7 +60,7 @@ Scenario: Not present content
 
 Scenario: Hidden content
   When I go to the home page with parameters:
-      | greeting   | greetingHidden |
-      | 'hi there' | 'true'         |
-    Then the greeting is present
-    And the greeting is not visible
+    | greeting   | greetingHidden |
+    | 'hi there' | 'true'         |
+  Then the greeting is present
+  And the greeting is not visible

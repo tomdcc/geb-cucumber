@@ -17,7 +17,7 @@ class FormPage extends Page {
 
 class AddressModule extends Module {
     static content = {
-        streetAddress      { $('input[name=streetAddress]') }
+        streetAddress      { $('textarea[name=streetAddress]') }
         city               { $('input[name=city]') }
         state              { $('select[name=state]') }
         postcode           { $('input[name=postcode]') }
