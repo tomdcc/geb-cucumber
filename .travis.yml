@@ -9,6 +9,9 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 install: ./gradlew clean resolveAllDependencies assemble
 script: ./gradlew check
+    && ./gradlew uploadSnapshots
 env:
   global:
   - TERM=dumb
+  - secure: "OQy3PvVhSZMkNGewffINm55bihHWZLfW0KqLJwSL4oBc5VPrz8VmGDaL5uTJ/dQVfFHL6nRH6tYsj3Kgrmbx5KVaYlCILJMbnTW4rE5FI8KMnRnwSCE2fiUmqaaXlqXF5xUSFCn6nf0R4Hh2Kow7vGCWxu6NtkCc/D3D4V+mH0Q="
+  - secure: "Uv0uujcv3x1GajKiNQblo7y+VUjboXFpOmB314nkRouUEq5TDHVl3X18aejJsN7vJTmYnaZuAZutNnAoObrUm++yD69iC/CKSvGbgWFLY8BH5WAw3Ute7tpYjcQCNyGPkGhBNJJloZc9ckYHnNTmstyxgk3pf2j9J2qul/0FBoA="

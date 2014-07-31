@@ -48,7 +48,7 @@ allprojects {
 		seleniumVersion = "2.41.0"
 		spockVersion = "0.7-groovy-1.8"
 		cucumberJvmVersion = "1.1.8"
-        cucumberVariablesVersion = '0.4-SNAPSHOT'
+        cucumberVariablesVersion = '0.4'
 
 		isSnapshot = version.endsWith("-SNAPSHOT")
 
@@ -70,7 +70,12 @@ allprojects {
 }
 
 // IDE support
-apply from: "./gradle/ide.gradle"
+apply from: "$project.rootDir/gradle/ide.gradle"
+
+// just sign / publish this module
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply from: "$project.rootDir/gradle/pom.gradle"
 
 
 dependencies {
@@ -105,3 +110,57 @@ allprojects {
         }
     }
 }
+
+signing {
+	sign configurations.archives
+	required { !isSnapshot && gradle.taskGraph.hasTask(uploadArchives) }
+}
+
+javadoc {
+	title = "Geb Cucumber API $version"
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+	from sourceSets.main.allSource
+	classifier = 'sources'
+}
+
+artifacts {
+	archives jar
+	archives javadocJar
+	archives sourcesJar
+}
+
+uploadArchives { task ->
+	repositories.mavenDeployer {
+		if(!isSnapshot) {
+			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+		}
+		uniqueVersion = false
+		gradle.taskGraph.whenReady { taskGraph ->
+			if (taskGraph.hasTask(task)) {
+				repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+					authentication(userName: sonatypeOssUsername, password: sonatypeOssPassword)
+				}
+				snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+					authentication(userName: sonatypeOssUsername, password: sonatypeOssPassword)
+				}
+			}
+		}
+	}
+}
+
+task uploadSnapshots << {
+	if(!isSnapshot) {
+		println "Not uploading snapshot as not a snapshot version"
+	}
+}
+if(isSnapshot) {
+	uploadSnapshots.dependsOn(uploadArchives)
+}
+
