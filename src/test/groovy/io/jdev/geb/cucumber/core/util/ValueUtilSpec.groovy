@@ -2,6 +2,7 @@ package io.jdev.geb.cucumber.core.util
 
 import geb.content.SimplePageContent
 import geb.navigator.Navigator
+import io.jdev.geb.cucumber.core.CheckedDecoder
 import org.openqa.selenium.WebElement
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -135,4 +136,68 @@ class ValueUtilSpec extends Specification {
             getValue(null) == null
     }
 
+    void "hasValue gives correct values for simple string equality"() {
+        when:
+        hasValue('foo', 'foo')
+
+        then:
+        notThrown(Throwable)
+
+        when:
+        hasValue(1, '1')
+
+        then:
+        notThrown(Throwable)
+
+        when:
+        hasValue('foo', 'bar')
+
+        then:
+        thrown(AssertionError)
+    }
+
+    void "hasValue gives correct values for checkbox state matching"() {
+        given:
+        Navigator field = Mock(Navigator)
+
+        // field and expectation both checked
+        when:
+        hasValue(field, CheckedDecoder.CheckedState.checked)
+
+        then:
+        1 * field.value() >> 'not false'
+
+        and:
+        notThrown(Throwable)
+
+        // field and expectation both unchecked
+        when:
+        hasValue(field, CheckedDecoder.CheckedState.unchecked)
+
+        then:
+        1 * field.value() >> false
+
+        and:
+        notThrown(Throwable)
+
+        // field checked, expectation unchecked
+        when:
+        hasValue(field, CheckedDecoder.CheckedState.unchecked)
+
+        then:
+        1 * field.value() >> 'not false'
+
+        and:
+        thrown(AssertionError)
+
+        // field unchecked, expectation checked
+        when:
+        hasValue(field, CheckedDecoder.CheckedState.checked)
+
+        then:
+        1 * field.value() >> false
+
+        and:
+        thrown(AssertionError)
+    }
 }
