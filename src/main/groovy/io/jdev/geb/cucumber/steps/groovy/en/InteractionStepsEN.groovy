@@ -34,7 +34,7 @@ When(~/^I enter the following values in(?:to)? the (.*) section:$/) { String fie
     steps.enterValues(fieldDesc, dataTable)
 }
 
-Then(~/^the (.*?)(?: field| label)? has (?:the )?value (?:of )?(.*)$/) { String fieldDesc, String value ->
+Then(~/^the (.*?)(?: field| label)? (?:matches |has (?:the )?value (?:of )?)(.*)$/) { String fieldDesc, String value ->
     steps.hasValue(value, fieldDesc)
 }
 

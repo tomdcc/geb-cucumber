@@ -29,6 +29,8 @@ import geb.navigator.Navigator
 import io.jdev.geb.cucumber.core.CheckedDecoder
 import org.openqa.selenium.support.ui.Select
 
+import java.util.regex.Pattern
+
 class ValueUtil {
 
     static String getValue(def field) {
@@ -57,7 +59,12 @@ class ValueUtil {
             assert isChecked == wantChecked
         } else {
             String fieldValue = getValue(field)
-            assert fieldValue == expectedValue as String
+            if(expectedValue instanceof Pattern) {
+                assert expectedValue.matcher(fieldValue).matches()
+            } else {
+                // simple string equality
+                assert fieldValue == expectedValue as String
+            }
         }
     }
 

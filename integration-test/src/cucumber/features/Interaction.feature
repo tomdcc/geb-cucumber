@@ -35,14 +35,14 @@ Scenario: Enter values into module fields using table syntax
   Then the address section street address field has value '4 Woods Street'
   Then the address section city field has value 'Norwood'
   Then the address section state field has value 'SA'
-  Then the address section postcode field has value '5067'
+  Then the address section postcode field matches /\d{4}/
   Then the address section registered mail only box is not checked
   When I enter the following values into the address section:
     | street address     | city        | state | postcode | registered mail only |
     | '39 George Street' | 'Thebarton' | 'SA'  | '5031'   | checked              |
   Then the address section has the following values:
     | street address     | city        | state | postcode | registered mail only |
-    | '39 George Street' | 'Thebarton' | 'SA'  | '5031'   | checked              |
+    | '39 George Street' | 'Thebarton' | 'SA'  | /\d{4}/   | checked              |
 
 Scenario: Verify generic content
   When I go to the home page with parameters:

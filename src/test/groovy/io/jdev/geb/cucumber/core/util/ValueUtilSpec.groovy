@@ -200,4 +200,25 @@ class ValueUtilSpec extends Specification {
         and:
         thrown(AssertionError)
     }
+
+    void "hasValue gives correct values for regex pattern matching"() {
+        when:
+        hasValue('foo', ~/\w{3}/)
+
+        then:
+        notThrown(Throwable)
+
+        when:
+        hasValue(1, ~/\d/)
+
+        then:
+        notThrown(Throwable)
+
+        when:
+        hasValue('foo', ~/w{4}/)
+
+        then:
+        thrown(AssertionError)
+    }
+
 }
