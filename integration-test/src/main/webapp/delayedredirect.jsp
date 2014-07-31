@@ -22,10 +22,18 @@
   ~ THE SOFTWARE.
   --%>
 
+<%
+    String queryString = request.getQueryString();
+    if(queryString == null) {
+        queryString = "";
+    } else {
+        queryString = "?" + queryString;
+    }
+%>
 <!doctype>
 <html>
 <head>
-    <meta http-equiv="refresh" content="1;URL=http://localhost:8080/integration-test/page2.jsp"/>
+    <meta http-equiv="refresh" content="1;URL=http://localhost:8080/integration-test/page2.jsp<%= queryString %>"/>
     <title>Delayed redirect page</title>
 </head>
 <body>

@@ -48,18 +48,22 @@ class InteractionSteps extends StepsBase {
         }
     }
 
-    void hasValue(String rawValue, String fieldDesc) {
+    void hasValue(boolean wait, String rawValue, String fieldDesc) {
         def value = variableScope.decodeVariable(rawValue)
-        def field = fieldFinder.findField(fieldDesc, browser.page)
-        ValueUtil.hasValue(field, value)
+        runWithOptionalWait(wait) {
+            def field = fieldFinder.findField(fieldDesc, browser.page)
+            ValueUtil.hasValue(field, value)
+        }
     }
 
 
-    void hasValues(String fieldDesc, DataTable dataTable) {
-        def target = getOptionalTarget(fieldDesc)
+    void hasValues(boolean wait, String fieldDesc, DataTable dataTable) {
         List<Map<String,Object>> vals = TableUtil.dataTableToMaps(variableScope, dataTable, false)
         assert vals.size() == 1, "Cannot enter more than 1 row when verifying multiple values"
-        targetHasValues(target, vals.first())
+        runWithOptionalWait(wait) {
+            def target = getOptionalTarget(fieldDesc)
+            targetHasValues(target, vals.first())
+        }
     }
 
     private void targetHasValues(def target, Map<String,Object> vals) {
@@ -75,33 +79,45 @@ class InteractionSteps extends StepsBase {
         field.click()
     }
 
-    void isChecked(String fieldDesc) {
-        def field = fieldFinder.findField(fieldDesc, browser.page)
-        assert field.value() != false
+    void isChecked(boolean wait, String fieldDesc) {
+        assert runWithOptionalWait(wait) {
+            def field = fieldFinder.findField(fieldDesc, browser.page)
+            field.value() != false
+        }
     }
 
-    void isNotChecked(String fieldDesc) {
-        def field = fieldFinder.findField(fieldDesc, browser.page)
-        assert field.value() == false
+    void isNotChecked(boolean wait, String fieldDesc) {
+        assert runWithOptionalWait(wait) {
+            def field = fieldFinder.findField(fieldDesc, browser.page)
+            field.value() == false
+        }
     }
 
-    void isPresent(String fieldDesc) {
-        def field = fieldFinder.findField(fieldDesc, browser.page)
-        assert field
+    void isPresent(boolean wait, String fieldDesc) {
+        assert runWithOptionalWait(wait) {
+            def field = fieldFinder.findField(fieldDesc, browser.page)
+            field
+        }
     }
 
-    void isNotPresent(String fieldDesc) {
-        def field = fieldFinder.findField(fieldDesc, browser.page)
-        assert !field
+    void isNotPresent(boolean wait, String fieldDesc) {
+        assert runWithOptionalWait(wait) {
+            def field = fieldFinder.findField(fieldDesc, browser.page)
+            !field
+        }
     }
 
-    void isVisible(String fieldDesc) {
-        def field = fieldFinder.findField(fieldDesc, browser.page)
-        field.displayed
+    void isVisible(boolean wait, String fieldDesc) {
+        assert runWithOptionalWait(wait) {
+            def field = fieldFinder.findField(fieldDesc, browser.page)
+            field.displayed
+        }
     }
 
-    void isNotVisible(String fieldDesc) {
-        def field = fieldFinder.findField(fieldDesc, browser.page)
-        field.displayed
+    void isNotVisible(boolean wait, String fieldDesc) {
+        assert runWithOptionalWait(wait) {
+            def field = fieldFinder.findField(fieldDesc, browser.page)
+            !field.displayed
+        }
     }
 }

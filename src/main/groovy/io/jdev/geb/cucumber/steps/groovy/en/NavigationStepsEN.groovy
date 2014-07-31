@@ -31,7 +31,6 @@ When(~/^I go to the (.* (?:page|dialog)) with parameters:$/) { String pageName, 
 }
 
 When(~/^I go to the (.* (?:page|dialog)) for (the .*)$/) { String pageName, String paramName ->
-    println "steps.to($pageName, $paramName - 'the ', $paramName)"
     steps.to(pageName, paramName - 'the ', paramName)
 }
 
@@ -55,8 +54,8 @@ When(~/^I go via the (.* (?:page|dialog)) for (the .*)$/) { String pageName, Str
     steps.to(pageName, paramName - 'the ', paramName)
 }
 
-Then(~/^I am at the (.* (?:page|dialog))$/) { String pageName ->
-    steps.at(pageName)
+Then(~/^(eventually )?I am at the (.* (?:page|dialog))$/) { String eventually, String pageName ->
+    steps.at(eventually as boolean, pageName)
 }
 
 When(~/^I pause for (\d+) seconds?$/) { int seconds ->
@@ -71,11 +70,12 @@ When(~/^I go to '(.*)' with parameters:$/) { String path, DataTable table ->
     steps.go(path, table)
 }
 
-Then(~/^I am at '(.*)'$/) { String path ->
-    steps.atPath(path)
+Then(~/^(eventually )?I am at '(.*)'$/) { String eventually, String path ->
+    steps.atPath(eventually as boolean, path)
 }
 
-Then(~/^another window has popped up$/) { ->
+Then(~/^(eventually )?another window has popped up$/) { String eventually ->
+    // ignore eventually here as popping windows up always needs a bit of a waitFor
     steps.assertPopup()
 }
 
@@ -83,7 +83,8 @@ When(~/^I switch to the popped up window$/) { ->
     steps.switchToPopup(null)
 }
 
-Then(~/^the (.* (?:page|dialog)) has popped up$/) { String pageName ->
+Then(~/^(eventually )?the (.* (?:page|dialog)) has popped up$/) { String eventually, String pageName ->
+    // ignore eventually here as popping windows up always needs a bit of a waitFor
     steps.switchToPopup(pageName)
 }
 
@@ -91,15 +92,20 @@ When(~/^I close the popped up window$/) { ->
     steps.closePopup()
 }
 
-Then(~/^the popped up window has closed$/) { ->
+Then(~/^(eventually )?the popped up window has closed$/) { String eventually ->
+    // ignore eventually here as closing windows always needs a bit of a waitFor
     steps.popupClosed()
 }
 
-Then(~/^an alert box has popped up$/) { ->
+Then(~/^(eventually )?an alert box has popped up$/) { String eventually ->
+    // ignore eventually here as alerts frequently need a bit of a waitFor
+    // and we do it automatically
     steps.hasAlert(null)
 }
 
-Then(~/^an alert box with message (.*) has popped up$/) { String message ->
+Then(~/^(eventually )?an alert box with message (.*) has popped up$/) { String eventually, String message ->
+    // ignore eventually here as alerts frequently need a bit of a waitFor
+    // and we do it automatically
     steps.hasAlert(message)
 }
 

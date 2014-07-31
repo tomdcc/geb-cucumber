@@ -31,7 +31,7 @@
     <h1>Home Page</h1>
     <%
         String greeting = request.getParameter("greeting");
-        String greetingHidden = request.getParameter("greeting");
+        String greetingHidden = request.getParameter("greetingHidden");
         if(greeting != null) {
             String style = "true".equals(greetingHidden) ? "style='display:none'" : "";
             %>

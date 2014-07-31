@@ -81,10 +81,12 @@ class NavigationSteps extends StepsBase {
         via(path, tableToParams(dataTable))
     }
 
-    public void at(String pageName) {
+    public void at(boolean wait, String pageName) {
         Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
         assert pageClass
-        assert browser.at(pageClass)
+        assert runWithOptionalWait(wait) {
+            browser.at(pageClass)
+        }
     }
 
     public void pause(int seconds) {
@@ -107,9 +109,11 @@ class NavigationSteps extends StepsBase {
         TableUtil.dataTableToMaps(variableScope, dataTable).first()
     }
 
-    public void atPath(String path) {
+    public void atPath(boolean wait, String path) {
         String expectedUrl = buildUrl(path)
-        assert browser.driver.currentUrl == expectedUrl
+        assert runWithOptionalWait(wait) {
+            browser.driver.currentUrl == expectedUrl
+        }
     }
 
     private String buildUrl(String path) {
@@ -153,7 +157,7 @@ class NavigationSteps extends StepsBase {
         def newWindowHandle = browser.driver.windowHandles.find { it != mainWindowHandle }
         browser.driver.switchTo().window(newWindowHandle)
         if(pageName) {
-            at(pageName)
+            at(false, pageName)
         }
     }
 
@@ -194,7 +198,7 @@ class NavigationSteps extends StepsBase {
     }
 
     public void hasAlert(String rawAlertMessage) {
-        currentAlert = browser.waitFor { browser.driver.switchTo().alert() }
+        currentAlert = (Alert) browser.waitFor { browser.driver.switchTo().alert() }
         if(rawAlertMessage) {
             String expectedAlertMessage = variableScope.decodeVariable(rawAlertMessage) as String
             assert currentAlert.text == expectedAlertMessage

@@ -50,13 +50,13 @@ class NavigationStepsSpec extends Specification {
 
     void "can detect if at absolute url"() {
         when: 'assert at current url'
-            steps.atPath(CURRENT_URL)
+            steps.atPath(false, CURRENT_URL)
 
         then: 'all ok'
             notThrown(Throwable)
 
         when: 'assert at different url'
-            steps.atPath(CURRENT_URL + '/blah')
+            steps.atPath(false, CURRENT_URL + '/blah')
 
         then: 'assertion thrown'
             thrown(AssertionError)
@@ -64,13 +64,13 @@ class NavigationStepsSpec extends Specification {
 
     void "can detect if at relative uri"() {
         when: 'assert at current uri'
-            steps.atPath(CURRENT_URI)
+            steps.atPath(false, CURRENT_URI)
 
         then: 'all ok'
             notThrown(Throwable)
 
         when: 'assert at different uri'
-            steps.atPath(BASE_URL + '/blah')
+            steps.atPath(false, BASE_URL + '/blah')
 
         then: 'assertion thrown'
             thrown(AssertionError)

@@ -29,4 +29,11 @@ abstract class StepsBase {
         }
     }
 
+    public <T> T runWithOptionalWait(boolean wait, Closure<T> closure) {
+        if(wait) {
+            browser.waitFor(closure)
+        } else {
+            closure.call()
+        }
+    }
 }

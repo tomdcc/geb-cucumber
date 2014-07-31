@@ -14,6 +14,10 @@ Scenario: Delayed redirect
   When I pause for 2 seconds
   Then I am at the second page
 
+Scenario: Delayed redirect with eventually
+  When I go to the delayed redirect page
+  Then eventually I am at the second page
+
 Scenario: Direct URL
   When I go to 'http://localhost:8080/integration-test/form.jsp'
   Then I am at the form page
@@ -56,6 +60,13 @@ Scenario: Redirect with params
     | greeting   | dogName      |
     | 'hi there' | the dog name |
   Then I am at 'page2.jsp?greeting=hi+there&dogName=Max'
+
+Scenario: Delayed redirect with params
+  Given the dog name is set to 'Max'
+  When I go via the delayed redirect page with parameters:
+    | greeting   | dogName      |
+    | 'hi there' | the dog name |
+  Then eventually I am at 'page2.jsp?greeting=hi+there&dogName=Max'
 
 Scenario: Page with single variable name
   Given the dog id is set to '1'
