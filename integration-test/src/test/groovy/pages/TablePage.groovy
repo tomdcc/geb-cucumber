@@ -22,10 +22,25 @@
  * THE SOFTWARE.
  */
 
-package io.jdev.geb.cucumber.core
+package pages
 
-interface FieldFinder {
+import geb.Module
+import geb.Page
 
-    def findField(String fieldDescription, def page);
+class TablePage extends Page {
+    static url = 'table.jsp'
+    static at = { title == 'Table page' }
+    static content = {
+        users { $('tbody tr').collect { module TableRow, it} }
+    }
+}
 
+class TableRow extends Module {
+    static content = {
+        id           { $('td.id') }
+        name         { $('td.name') }
+        username     { $('td.username') }
+        emailAddress { $('td.email') }
+        dob          { $('td.dob') }
+    }
 }

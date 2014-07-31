@@ -29,16 +29,18 @@ apply plugin: "com.github.samueltbrown.cucumber"
 
 dependencies {
     providedCompile 'javax.servlet:servlet-api:2.5'
+    compile 'org.shamdata:sham:0.3'
 
+    testCompile project(':')
     testCompile "org.codehaus.groovy:groovy:$groovyVersion"
     testCompile "org.gebish:geb-core:$gebVersion"
+    testCompile 'info.cukes:cucumber-groovy:1.1.8'
+    testCompile "io.jdev.cucumber:cucumber-variables:$cucumberVariablesVersion"
 
     testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
     testCompile "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
     testRuntime "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
 
-    cucumberCompile project(':')
-    cucumberCompile 'info.cukes:cucumber-groovy:1.1.8'
 }
 
 // TODO: implement nicer way to do this, probably reading GebConfig
@@ -57,7 +59,8 @@ cucumber {
     formats = ['asyougo']
     glueDirs = [
         'classpath:io.jdev.geb.cucumber.steps.groovy.en',
-        'classpath:io.jdev.cucumber.variables.groovy.en'
+        'classpath:io.jdev.cucumber.variables.groovy.en',
+        'classpath:teststeps'
     ]
     featureDirs = ["$project.projectDir/src/cucumber/features".toString()]
     if(project.hasProperty('cucumberTags')) {

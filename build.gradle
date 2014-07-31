@@ -48,6 +48,7 @@ allprojects {
 		seleniumVersion = "2.41.0"
 		spockVersion = "0.7-groovy-1.8"
 		cucumberJvmVersion = "1.1.8"
+        cucumberVariablesVersion = '0.4-SNAPSHOT'
 
 		isSnapshot = version.endsWith("-SNAPSHOT")
 
@@ -79,7 +80,7 @@ dependencies {
 	provided "info.cukes:cucumber-groovy:$cucumberJvmVersion"
     provided "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
     provided "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
-	compile "io.jdev.cucumber:cucumber-variables:0.4-SNAPSHOT"
+	compile "io.jdev.cucumber:cucumber-variables:$cucumberVariablesVersion"
 
 
 

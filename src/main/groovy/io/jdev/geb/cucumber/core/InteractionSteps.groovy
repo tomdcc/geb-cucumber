@@ -120,4 +120,64 @@ class InteractionSteps extends StepsBase {
             !field.displayed
         }
     }
+
+    void hasRows(boolean wait, String fieldDesc, int expectedNumRows) {
+        runWithOptionalWait(wait) {
+            def field = fieldFinder.findField(fieldDesc, browser.page)
+            assert field.size() == expectedNumRows
+            true
+        }
+    }
+
+    void hasRowValues(boolean wait, String fieldDesc, DataTable dataTable) {
+        List<Map<String,Object>> expectedRows = TableUtil.dataTableToMaps(variableScope, dataTable, false)
+        runWithOptionalWait(wait) {
+            def table = fieldFinder.findField(fieldDesc, browser.page)
+            int expectedNumberOfRows = expectedRows.size()
+            assert table.size() == expectedNumberOfRows
+            for(int i = 0; i < expectedNumberOfRows; i++) {
+                Map<String,Object> expectedRow = expectedRows[i]
+                def row = table[i]
+                targetHasValues(row, expectedRow)
+            }
+            true
+        }
+    }
+
+    void hasRowsMatching(boolean wait, String fieldDesc, DataTable dataTable, String matchingRowVarName) {
+        List<Map<String,Object>> expectedRows = TableUtil.dataTableToMaps(variableScope, dataTable, false)
+        runWithOptionalWait(wait) {
+            def table = fieldFinder.findField(fieldDesc, browser.page)
+            for(Map<String,Object> expectedRow : expectedRows) {
+                def row = hasRowMatching(table, expectedRow)
+                assert row
+                // store
+                variableScope.storeVariable(matchingRowVarName, row)
+            }
+            true
+        }
+    }
+
+    void hasNoRowsMatching(boolean wait, String fieldDesc, DataTable dataTable) {
+        List<Map<String, Object>> expectedRows = TableUtil.dataTableToMaps(variableScope, dataTable, false)
+        runWithOptionalWait(wait) {
+            def table = fieldFinder.findField(fieldDesc, browser.page)
+            for (Map<String, Object> expectedRow : expectedRows) {
+                assert !hasRowMatching(table, expectedRow)
+            }
+            true
+        }
+    }
+
+    private def hasRowMatching(def table, Map<String,Object> expectedRow) {
+        for(def row : table) {
+            try {
+                targetHasValues(row, expectedRow)
+                return row
+            } catch (AssertionError e) {
+                // wasn't found
+            }
+        }
+        false
+    }
 }

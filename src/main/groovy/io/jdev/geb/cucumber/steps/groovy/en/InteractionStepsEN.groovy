@@ -73,3 +73,23 @@ Then(~/^(eventually )?the page has the following values:$/) { String eventually,
 Then(~/^(eventually )?the (.*) section has the following values:$/) { String eventually, String fieldDesc, DataTable dataTable ->
     steps.hasValues(eventually as boolean, fieldDesc, dataTable)
 }
+
+Then(~/^(eventually )?the (.*) table has (\d+) rows?$/) { String eventually, String fieldDesc, int rows ->
+    steps.hasRows(eventually as boolean, fieldDesc, rows)
+}
+
+Then(~/^(eventually )?the (.*) table has no rows?$/) { String eventually, String fieldDesc ->
+    steps.hasRows(eventually as boolean, fieldDesc, 0)
+}
+
+Then(~/^(eventually )?the (.*) table has the following values:$/) { String eventually, String fieldDesc, DataTable dataTable ->
+    steps.hasRowValues(eventually as boolean, fieldDesc, dataTable)
+}
+
+Then(~/^(eventually )?the (.*) table has (?:a )?rows? matching the following values:$/) { String eventually, String fieldDesc, DataTable dataTable ->
+    steps.hasRowsMatching(eventually as boolean, fieldDesc, dataTable, "$fieldDesc matching row")
+}
+
+Then(~/^(eventually )?the (.*) table has no rows matching the following values:$/) { String eventually, String fieldDesc, DataTable dataTable ->
+    steps.hasNoRowsMatching(eventually as boolean, fieldDesc, dataTable)
+}

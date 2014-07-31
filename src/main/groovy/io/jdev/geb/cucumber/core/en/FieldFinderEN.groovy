@@ -30,19 +30,43 @@ import java.util.regex.Pattern
 import static io.jdev.geb.cucumber.core.util.NameUtil.lowerCaseToCamelCase
 import io.jdev.geb.cucumber.core.FieldFinder
 
-class FieldFinderEN extends FieldFinder {
+class FieldFinderEN implements FieldFinder {
 
     static final Pattern SECTION_PATTERN = ~/(.*?) (?:section|table) (.*)/
     static final Pattern NTH_SECTION_PATTERN = ~/(\d+)(?:st|nd|rd|th) (.*?) (?:section|table) (.*)/
     static final Pattern ROW_PATTERN = ~/(\d+)(?:st|nd|rd|th) row (.*)/
 
     @Override
-    String fieldDescriptionToFieldName(String fieldDescription) {
+    def findField(String fieldDescription, def page) {
+        findFieldFromParent(fieldDescription, page, true)
+    }
+
+    private def findFieldFromParent(String fieldDescription, def parent, boolean topLevel) {
+        FieldResult fieldSearchResult = null
+        if(!topLevel) {
+            // modules can have rows, but pages can't
+            fieldSearchResult = findRowField(fieldDescription, parent)
+        }
+        if(fieldSearchResult == null) {
+            fieldSearchResult = findNthSectionField(fieldDescription, parent)
+        }
+        if(fieldSearchResult == null) {
+            fieldSearchResult = findSectionField(fieldDescription, parent)
+        }
+        if(fieldSearchResult != null) {
+            // recurse
+            return findFieldFromParent(fieldSearchResult.newFieldDescription, fieldSearchResult.newParent, false)
+        } else {
+            String fieldName = fieldDescriptionToFieldName(fieldDescription)
+            return parent[fieldName]
+        }
+    }
+
+    static String fieldDescriptionToFieldName(String fieldDescription) {
         lowerCaseToCamelCase(fieldDescription)
     }
 
-    @Override
-    FieldResult findSectionField(String fieldDescription, parent) {
+    static FieldResult findSectionField(String fieldDescription, parent) {
         Matcher matcher = fieldDescription =~ SECTION_PATTERN
         if(matcher.matches()) {
             String sectionDesc = matcher.group(1)
@@ -55,8 +79,7 @@ class FieldFinderEN extends FieldFinder {
         }
     }
 
-    @Override
-    FieldResult findNthSectionField(String fieldDescription, parent) {
+    static FieldResult findNthSectionField(String fieldDescription, parent) {
         Matcher matcher = fieldDescription =~ NTH_SECTION_PATTERN
         if(matcher.matches()) {
             int num = matcher.group(1) as int
@@ -69,8 +92,7 @@ class FieldFinderEN extends FieldFinder {
         }
     }
 
-    @Override
-    FieldResult findRowField(String fieldDescription, parent) {
+    static FieldResult findRowField(String fieldDescription, parent) {
         Matcher matcher = fieldDescription =~ ROW_PATTERN
         if(matcher.matches()) {
             int num = matcher.group(1) as int
@@ -81,4 +103,8 @@ class FieldFinderEN extends FieldFinder {
         }
     }
 
+    public static class FieldResult {
+        def newParent
+        String newFieldDescription
+    }
 }
