@@ -32,19 +32,21 @@ import org.openqa.selenium.support.ui.Select
 class ValueUtil {
 
     static String getValue(def field) {
-        if(field instanceof String) {
-            // someone calling text() in their geb content definition
-            field
-        } else if((field instanceof Navigator && field.is('select')) || (field instanceof SimplePageContent && field.navigator.is('select'))) {
-            // get the text for the selected option, rather than its id value
-            new Select(field.getElement(0)).firstSelectedOption.text.trim()
-        } else {
-            def value = field.value()
-            if(!value) {
-                // maybe a plain div rather than input field
-                value = field.text()
+        if(field instanceof Navigator || field instanceof SimplePageContent) {
+            // gebish objects
+            if((field instanceof Navigator && field.is('select')) || (field instanceof SimplePageContent && field.navigator.is('select'))) {
+                // get the text for the selected option, rather than its id value
+                return new Select(field.firstElement()).firstSelectedOption.text.trim()
+            } else {
+                def value = field.value()
+                if(!value) {
+                    // maybe a plain div rather than input field
+                    value = field.text()
+                }
+                return value?.trim()
             }
-            value?.trim()
+        } else {
+            (field as String)?.trim()
         }
     }
 
