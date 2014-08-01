@@ -51,8 +51,6 @@ allprojects {
         cucumberVariablesVersion = '0.4'
 
 		isSnapshot = version.endsWith("-SNAPSHOT")
-
-		publishedModules = [':miniprofiler-core', ':miniprofiler-test-support']
 	}
 
     repositories {
