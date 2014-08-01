@@ -41,6 +41,45 @@ to your cucumber glue directory list. See the project's
 [integration test build file](https://github.com/tomdcc/geb-cucumber/tree/master/integration-test/build.gradle)
 for an example.
 
+Usage
+-----
+
+### Pages and page navigation
+
+Geb Cucumber attempts to convert names of pages into page class names by
+converting lower case names with spaces into proper case, e.g. for the page
+name `customer feedback page`, it will look for a class named
+`CustomerFeedbackPage`. Page names can end with `page` or `dialog`.
+
+The library will look for pages in a given set of packages. Currently the way
+to set the list is by setting the `geb.cucumber.step.packages` system
+property.
+
+### Fields and interactions
+
+Geb Cucumber will look up field names based on the same lower-case to
+camel-case conversion, e.g. `login button` becomes `loginButton`. It then
+looks up the matching content in the Geb page object.
+
+### Modules
+
+It is possible to access fields inside Geb modules on your page. This is done
+by appending `<section name> section` to the field definition, so e.g. 
+`billing address section state` is mapped to the `state` property in the
+module returned by the page's `billingAddress` content.
+
+### Tables
+
+It is possible to verify that a table, implemented in the page model as a list
+of Geb modules:
+ - Has rows matching values in a cucumber table
+ - Has only rows matching values in a cucumber table
+ - Has a given number of rows
+
+### Waiting for conditions
+
+If you append `eventually` in front of your verification steps, the library
+will wrap the verification in a Geb `waitFor` block.
 
 Changelog
 ---------
