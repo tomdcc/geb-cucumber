@@ -25,8 +25,25 @@ When I click on the view details button on the matching row   # (previously matc
 Have a look at the [integration tests](https://github.com/tomdcc/geb-cucumber/tree/master/integration-test/src/cucumber/features)
 to see what it's capable of.
 
+Installation
+------------
 
-### Changelog
+Geb Cucumber is deployed to Maven Central and can be added to your project as a dependency using the following coordinates:
+
+    groupId: io.jdev.geb
+    artifactId: geb-cucumber
+    version: 0.1
+
+Or just download the jar from http://search.maven.org/ if your build system is a bit less connected.
+
+Once installed, you should add `classpath:io.jdev.geb.cucumber.steps.groovy.en`
+to your cucumber glue directory list. See the project's
+[integration test build file](https://github.com/tomdcc/geb-cucumber/tree/master/integration-test/build.gradle)
+for an example.
+
+
+Changelog
+---------
 
 #### Version 0.1
  - Initial version
