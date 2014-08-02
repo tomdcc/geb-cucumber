@@ -7,18 +7,18 @@ using Geb and your Geb page objects.
 Example:
 
 ```cucumber
-Scenario: Log in and smell the roses                          # equivalent geb groovy commands below
-Given a customer                                              # insert into db and save some some variables
-When I go to the login page                                   # to LoginPage
-And I enter the following details:                            # username.value(<the customer username>)
-  | username              | password         | remember me |  # password.value('some password')
-  | the customer username | 'some password ' | checked     |  # rememberMe.click()
-And I click the login button                                  # loginButton
-Then eventually I am at the customer portal page              # waitFor { at(CustomerPortalPage) }
-And the orders table a row matching the following values:     # (CustomerPortalPage needs to have an orders property
-  | id    | description          | final price |              #  that is a list of Geb modules with id, description 
-  | /\d+/ | 'Collins Dictionary' | '$50.05'    |              #  and finalPrice properties as content).
-When I click on the view details button on the matching row   # (previously matched row).viewDetailsButton.click()
+Scenario: Log in and smell the roses                           # equivalent geb groovy commands below
+Given a customer                                               # insert into db and save some some variables
+When I go to the login page                                    # to LoginPage
+And I enter the following details:                             # username.value(<the customer username>)
+  | username              | password        | remember me |    # password.value('some password')
+  | the customer username | 'some password' | checked     |    # rememberMe.click()
+And I click the login button                                   # loginButton.click()
+Then eventually I am at the customer portal page               # waitFor { at(CustomerPortalPage) }
+And the orders table has a row matching the following values:  # (CustomerPortalPage needs to have an orders property
+  | id    | description          | final price |               #  that is a list of Geb modules with id, description 
+  | /\d+/ | 'Collins Dictionary' | '$50.05'    |               #  and finalPrice properties as content).
+When I click the orders table matching row view details button # (previously matched row).viewDetailsButton.click()
 # etc
 ```
 
