@@ -40,7 +40,7 @@ allprojects {
 
 
 	group = 'io.jdev.geb'
-	version = '0.1'
+	version = '0.2-SNAPSHOT'
 
 	ext {
 		groovyVersion = "1.8.6"
