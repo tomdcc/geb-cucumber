@@ -25,6 +25,7 @@
 package io.jdev.geb.cucumber.core.en
 
 import io.jdev.geb.cucumber.core.BasePageFinder
+import io.jdev.geb.cucumber.core.PageFinder
 import io.jdev.geb.cucumber.core.PageFinderSetup
 import io.jdev.geb.cucumber.core.util.NameUtil
 
@@ -35,13 +36,17 @@ class PageFinderEN extends BasePageFinder {
 
 	static final Pattern PAGE_NAME_PATTERN = Pattern.compile("(.*) (page|dialog)")
 
-    private static PageFinderEN instance
+    private static PageFinder instance
 
-    public static PageFinderEN getInstance() {
+    public static PageFinder getInstance() {
         if(!instance) {
             instance = new PageFinderEN(packageNames: PageFinderSetup.packageNames)
         }
         instance
+    }
+	
+    public static void setInstance(PageFinder pageFinder) {
+        instance = pageFinder
     }
 
 	@Override
