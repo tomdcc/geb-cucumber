@@ -22,6 +22,8 @@
  * THE SOFTWARE.
  */
 
+
+
 package io.jdev.geb.cucumber.core
 
 import cucumber.api.Scenario
@@ -31,73 +33,37 @@ import io.jdev.cucumber.variables.core.Decoder
 import org.openqa.selenium.WebDriver
 import spock.lang.Specification
 
-class NavigationStepsSpec extends Specification {
+class InteractionStepsSpec extends Specification {
 
     static final String BASE_URL = 'http://foo.com/bar/'
     static final String CURRENT_URL = 'http://foo.com/bar/baz/foo.jsp'
     static final String CURRENT_URI = 'baz/foo.jsp'
 
-    NavigationSteps steps
-    Browser browser
-    WebDriver driver
+    InteractionSteps steps
 
     void setup() {
-        steps = new NavigationSteps()
-        steps.browser = browser = Mock(Browser)
-
-        _ * browser.getBaseUrl() >> BASE_URL
-        driver = Mock(WebDriver)
-        _ * browser.getDriver() >> driver
-        _* driver.getCurrentUrl() >> CURRENT_URL
+        steps = new InteractionSteps()
     }
 
     void cleanup() {
         VariableScope.removeCurrentScope()
     }
 
-    void "can detect if at absolute url"() {
-        when: 'assert at current url'
-            steps.atPath(false, CURRENT_URL)
-
-        then: 'all ok'
-            notThrown(Throwable)
-
-        when: 'assert at different url'
-            steps.atPath(false, CURRENT_URL + '/blah')
-
-        then: 'assertion thrown'
-            thrown(AssertionError)
-    }
-
-    void "can detect if at relative uri"() {
-        when: 'assert at current uri'
-            steps.atPath(false, CURRENT_URI)
-
-        then: 'all ok'
-            notThrown(Throwable)
-
-        when: 'assert at different uri'
-            steps.atPath(false, BASE_URL + '/blah')
-
-        then: 'assertion thrown'
-            thrown(AssertionError)
-    }
-
     void "registers and cleans up steps in binding"() {
         given: 'binding and scenario'
-            def binding = new Binding()
-            def scenario = Mock(Scenario)
+            Binding binding = new Binding()
+            Scenario scenario = Mock(Scenario)
 
         when: 'call before method'
-            steps.before(scenario, binding, Mock(PageFinder), Mock(Decoder))
+            steps.before(scenario, binding, Mock(FieldFinder), Mock(Decoder))
 
         then: 'registered itself in binding'
-            binding.navigationSteps == steps
+            binding.interactionSteps == steps
 
         when: 'call after method'
             steps.after(scenario)
 
         then: 'no longer there'
-            !binding.hasVariable('navigationSteps')
+            !binding.hasVariable('interactionSteps')
     }
 }

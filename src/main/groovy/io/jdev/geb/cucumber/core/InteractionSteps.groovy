@@ -11,8 +11,10 @@ class InteractionSteps extends StepsBase {
 
     FieldFinder fieldFinder
 
+    private static final String BINDING_VAR_NAME = 'interactionSteps'
+
     public void before (Scenario scenario, Binding binding, FieldFinder fieldFinder, Decoder variableDecoder) {
-        super.before(scenario, binding, variableDecoder)
+        super.before(scenario, binding, variableDecoder, BINDING_VAR_NAME)
         this.fieldFinder = fieldFinder
     }
 

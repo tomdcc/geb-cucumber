@@ -10,15 +10,22 @@ abstract class StepsBase {
     protected VariableScope variableScope
     protected BindingUpdater bindingUpdater
     protected Browser browser
+    protected Binding binding
+    protected String bindingName
 
-    protected void before(Scenario scenario, Binding binding, Decoder variableDecoder) {
+    protected void before(Scenario scenario, Binding binding, Decoder variableDecoder, String bindingName) {
         variableScope = VariableScope.getCurrentScope(scenario, variableDecoder)
-        if(!binding.hasVariable('browser')) {
+        if (!binding.hasVariable('browser')) {
             browser = new Browser()
             bindingUpdater = new BindingUpdater(binding, browser)
             bindingUpdater.initialize()
         } else {
             browser = binding.browser
+        }
+        if (bindingName) {
+            this.binding = binding
+            this.bindingName = bindingName
+            binding.setVariable(bindingName, this)
         }
     }
 
@@ -26,6 +33,9 @@ abstract class StepsBase {
         VariableScope.removeCurrentScope()
         if(bindingUpdater) {
             bindingUpdater.remove()
+        }
+        if(binding && binding.hasVariable(bindingName) && binding.getVariable(bindingName) == this) {
+            binding.variables.remove(bindingName)
         }
     }
 

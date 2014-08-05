@@ -39,8 +39,10 @@ class NavigationSteps extends StepsBase {
     String mainWindowHandle
     Alert currentAlert
 
+    private static final String BINDING_VAR_NAME = 'navigationSteps'
+
     public void before (Scenario scenario, Binding binding, PageFinder pageFinder, Decoder variableDecoder) {
-        super.before(scenario, binding, variableDecoder)
+        super.before(scenario, binding, variableDecoder, BINDING_VAR_NAME)
         this.pageFinder = pageFinder
     }
 
