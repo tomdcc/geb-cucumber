@@ -27,43 +27,29 @@ package io.jdev.geb.cucumber.core
 import cucumber.runtime.io.ClasspathResourceLoader
 import cucumber.runtime.io.Resource
 import geb.Page
+import io.jdev.geb.cucumber.core.util.ClassUtil
 
-abstract class BasePageFinder implements PageFinder {
+abstract class BasePageFinder<T> implements PageFinder {
 	abstract String pageNameToClassName(String pageName)
 
-	private Map<String, List<Class<? extends Page>>> classNameToClassMap
+    private Class<T> targetClass;
+	private Map<String, List<Class<? extends T>>> classNameToClassMap
 	List<String> packageNames
 
-	private void scanClasses() {
-		if(classNameToClassMap == null) {
-			classNameToClassMap = [:]
-			ClassLoader classLoader = getClass().classLoader
-			ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader(classLoader)
-			for(String packageName : packageNames) {
-				String prefix = packageName.replace('.' as char, '/' as char)
-				for(Resource resource in resourceLoader.resources(prefix, '.class')) {
-					String className = resource.getClassName('.class')
-					Class<?> cls = classLoader.loadClass(className)
-					if(!Page.isAssignableFrom(cls)) {
-						// not a geb page, whatever the class name is hinting
-						continue
-					}
-					String simpleClassName = cls.simpleName
-					List<Class> classesWithSimpleName = classNameToClassMap[simpleClassName]
-					if(!classesWithSimpleName) {
-						classNameToClassMap[simpleClassName] = [cls]
-					} else {
-						classesWithSimpleName << cls
-					}
-				}
-			}
-		}
-	}
+    protected BasePageFinder(Class<T> targetClass) {
+        this.targetClass = targetClass
+    }
 
-	Class<? extends Page> getPageClass(String name) {
+    private void scanClasses() {
+        if(classNameToClassMap == null) {
+            classNameToClassMap = ClassUtil.scanForClassesOfType(targetClass, packageNames)
+        }
+    }
+
+	Class<? extends T> getPageClass(String name) {
 		scanClasses()
 		String pageClassSimpleName = pageNameToClassName(name)
-		List<Class<? extends Page>> matchingClasses = classNameToClassMap[pageClassSimpleName]
+		List<Class<? extends T>> matchingClasses = classNameToClassMap[pageClassSimpleName]
 		if(!matchingClasses) {
 			throw new IllegalArgumentException("Cannot find page matching \"$name\"")
 		}

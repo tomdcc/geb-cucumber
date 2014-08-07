@@ -24,6 +24,7 @@
 
 package io.jdev.geb.cucumber.core.en
 
+import geb.Page
 import io.jdev.geb.cucumber.core.BasePageFinder
 import io.jdev.geb.cucumber.core.PageFinder
 import io.jdev.geb.cucumber.core.PageFinderSetup
@@ -32,11 +33,15 @@ import io.jdev.geb.cucumber.core.util.NameUtil
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-class PageFinderEN extends BasePageFinder {
+class PageFinderEN extends BasePageFinder<Page> {
 
 	static final Pattern PAGE_NAME_PATTERN = Pattern.compile("(.*) (page|dialog)")
 
     private static PageFinder instance
+
+    public PageFinderEN() {
+        super(Page)
+    }
 
     public static PageFinder getInstance() {
         if(!instance) {

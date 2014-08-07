@@ -24,8 +24,6 @@
 
 package io.jdev.geb.cucumber.core
 
-import geb.Page
-
-interface PageFinder {
-	Class<? extends Page> getPageClass(String name)
+interface PageFinder<T> {
+	Class<? extends T> getPageClass(String name)
 }
