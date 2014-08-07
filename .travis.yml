@@ -9,6 +9,7 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 install: ./gradlew clean resolveAllDependencies assemble
 script: ./gradlew check
+    && ./gradlew check -PgebVersion=0.9.2
     && ./gradlew uploadSnapshots
 env:
   global:

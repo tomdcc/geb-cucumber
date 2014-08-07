@@ -24,6 +24,7 @@
 
 package io.jdev.geb.cucumber.core.util
 
+import geb.content.Navigable
 import geb.content.SimplePageContent
 import geb.navigator.Navigator
 import io.jdev.geb.cucumber.core.CheckedDecoder
@@ -34,9 +35,9 @@ import java.util.regex.Pattern
 class ValueUtil {
 
     static String getValue(def field) {
-        if(field instanceof Navigator || field instanceof SimplePageContent) {
+        if(field instanceof Navigator || field instanceof Navigable) {
             // gebish objects
-            if((field instanceof Navigator && field.is('select')) || (field instanceof SimplePageContent && field.navigator.is('select'))) {
+            if((field instanceof Navigator && field.is('select')) || (field instanceof Navigable && field.$().is('select'))) {
                 // get the text for the selected option, rather than its id value
                 return new Select(field.firstElement()).firstSelectedOption.text.trim()
             } else {

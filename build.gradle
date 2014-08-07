@@ -44,7 +44,9 @@ allprojects {
 
 	ext {
 		groovyVersion = "1.8.6"
-		gebVersion = '0.9.2'
+		if(!project.hasProperty('gebVersion')) {
+			gebVersion = '0.9.3'
+		}
 		seleniumVersion = "2.41.0"
 		spockVersion = "0.7-groovy-1.8"
 		cucumberJvmVersion = "1.1.8"

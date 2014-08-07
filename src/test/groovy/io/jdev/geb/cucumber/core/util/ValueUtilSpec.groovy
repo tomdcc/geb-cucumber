@@ -51,15 +51,16 @@ class ValueUtilSpec extends Specification {
         SimplePageContent content = Mock(SimplePageContent)
         Navigator nav = Mock(Navigator)
         _ * nav.is('select') >> false
+		// handle differences between different geb versions
+		_ * content.$() >> nav
+		_ * content.methodMissing('$', []) >> nav
+		_ * content.value() >> ' hi there '
+		_ * content.methodMissing('value', []) >> ' hi there '
 
         when:
         String result = getValue(content)
 
-        then: 'value asked for'
-        1 * content.getProperty('navigator') >> nav
-        1 * content.methodMissing('value', []) >> ' hi there '
-
-        and: 'trimmed val returned'
+        then: 'trimmed val returned'
         result == 'hi there'
     }
 
@@ -67,12 +68,17 @@ class ValueUtilSpec extends Specification {
         given:
         SimplePageContent content = Mock(SimplePageContent)
         Navigator nav = Mock(Navigator)
-        _ * content.getProperty('navigator') >> nav
+		// handling some differences between geb versions here, that's why we're mocking
+		// things multiple ways
+        _ * content.$() >> nav
+        _ * content.methodMissing('$', []) >> nav
+        _ * content.is('select') >> true
         _ * nav.is('select') >> true
         WebElement select = Mock(WebElement)
         WebElement option = Mock(WebElement)
         _ * select.getTagName() >> 'select'
         _ * select.findElements(_) >> [option]
+        _ * content.firstElement() >> select
         _ * content.methodMissing('firstElement', []) >> select
         _ * option.getText() >> ' hi there '
         _ * option.isSelected() >> true
@@ -107,17 +113,19 @@ class ValueUtilSpec extends Specification {
         given:
         SimplePageContent content = Mock(SimplePageContent)
         Navigator nav = Mock(Navigator)
+		// handle differences between geb versions, mock in different ways
         _ * nav.is('select') >> false
+        _ * content.is('select') >> false
+		_ * content.$() >> nav
+		_ * content.value() >> value
+		_ * content.methodMissing('value', []) >> value
+		_ * content.text() >> ' hi there '
+		_ * content.methodMissing('text', []) >> ' hi there '
 
         when:
         String result = getValue(content)
 
-        then: 'value asked for'
-        1 * content.getProperty('navigator') >> nav
-        1 * content.methodMissing('value', []) >> value
-        1 * content.methodMissing('text', []) >> ' hi there '
-
-        and: 'trimmed val returned'
+        then: 'trimmed val returned'
         result == 'hi there'
 
         where:
