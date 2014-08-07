@@ -40,7 +40,7 @@ allprojects {
 
 
 	group = 'io.jdev.geb'
-	version = '0.2-SNAPSHOT'
+	version = '0.2'
 
 	ext {
 		groovyVersion = "1.8.6"
@@ -50,7 +50,7 @@ allprojects {
 		seleniumVersion = "2.41.0"
 		spockVersion = "0.7-groovy-1.8"
 		cucumberJvmVersion = "1.1.8"
-        cucumberVariablesVersion = '0.5-SNAPSHOT'
+        cucumberVariablesVersion = '0.5'
 
 		isSnapshot = version.endsWith("-SNAPSHOT")
 	}
