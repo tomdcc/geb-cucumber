@@ -7,7 +7,9 @@ branches:
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-install: ./gradlew clean resolveAllDependencies assemble
+install: ./gradlew clean resolveAllDependencies
+    && ./gradlew resolveAllDependencies -PgebVersion=0.9.2
+    && ./gradlew assemble
 script: ./gradlew check
     && ./gradlew check -PgebVersion=0.9.2
     && ./gradlew uploadSnapshots
