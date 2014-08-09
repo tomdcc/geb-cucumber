@@ -1,13 +1,11 @@
-//apply plugin: org.gradle.plugins.ide.idea.IdeaPlugin
 allprojects {
 	apply plugin: 'idea'
 	apply plugin: 'eclipse'
 
-//	apply plugin: 'propdeps-idea'
-//	apply plugin: 'propdeps-eclipse'
+	apply plugin: 'propdeps-idea'
+	apply plugin: 'propdeps-eclipse'
 }
 
-/*
 idea {
 	project {
 		jdkName = "1.7"
@@ -32,4 +30,3 @@ idea {
 		}
 	}
 }
-*/
