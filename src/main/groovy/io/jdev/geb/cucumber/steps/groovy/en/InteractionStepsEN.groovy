@@ -54,6 +54,10 @@ When(~/^I enter the following values:$/) { DataTable dataTable ->
     steps.enterValues(null, dataTable)
 }
 
+When(~/^I enter the following values from (the (?:.*)):$/) { String varName, DataTable dataTable ->
+    steps.enterFromVariable(null, varName, dataTable)
+}
+
 When(~/^I enter the following values in(?:to)? the (.*) section:$/) { String fieldDesc, DataTable dataTable ->
     steps.enterValues(fieldDesc, dataTable)
 }
@@ -96,6 +100,10 @@ Then(~/^(eventually )?the (.*) (?:check)?box is not checked$/) { String eventual
 
 Then(~/^(eventually )?the page has the following values:$/) { String eventually, DataTable dataTable ->
     steps.hasValues(eventually as boolean, null, dataTable)
+}
+
+Then(~/^(eventually )?the page has the following values from (the (?:.*)):$/) { String eventually, String varName, DataTable dataTable ->
+    steps.hasValuesFromVariable(eventually as boolean, null, varName, dataTable)
 }
 
 Then(~/^(eventually )?the (.*) section has the following values:$/) { String eventually, String fieldDesc, DataTable dataTable ->

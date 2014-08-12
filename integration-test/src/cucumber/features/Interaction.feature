@@ -65,6 +65,20 @@ Scenario: Hidden content
   Then the greeting is present
   And the greeting is not visible
 
+Scenario: Enter values into page from a map variable using table syntax
+  Given the programmer map variable has the following values:
+    | full name    | lang    |
+    | 'Bill Gates' | 'Basic' |
+  When I go to the form page
+  When I enter the following values from the programmer:
+    | name      | favourite language |
+    | full name | lang               |
+  Then the name field has value 'Bill Gates'
+  And the favourite language field has value 'Basic'
+  And the page has the following values from the programmer:
+    | name      | favourite language |
+    | full name | lang               |
+
 Scenario: Enter values into module fields from a map variable using table syntax
   Given the foo address map variable has the following values:
     | address lines                  | suburb    | state | zip      |
