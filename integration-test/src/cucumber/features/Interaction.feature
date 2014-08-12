@@ -64,3 +64,19 @@ Scenario: Hidden content
     | 'hi there' | 'true'         |
   Then the greeting is present
   And the greeting is not visible
+
+Scenario: Enter values into module fields from a map variable using table syntax
+  Given the foo address map variable has the following values:
+    | address lines                  | suburb    | state | zip      |
+    | 'Norwood Oval\n4 Woods Street' | 'Norwood' | 'SA'  | '5067'   |
+  When I go to the form page
+  And I enter the following values into the address section from the foo address:
+    | street address | city   | state | postcode |
+    | address lines  | suburb | state | zip      |
+  Then the address section street address field has value 'Norwood Oval\n4 Woods Street'
+  And the address section city field has value 'Norwood'
+  And the address section state field has value 'SA'
+  And the address section postcode field matches /\d{4}/
+  And the address section has the following values from the foo address:
+    | street address | city   | state | postcode |
+    | address lines  | suburb | state | zip      |

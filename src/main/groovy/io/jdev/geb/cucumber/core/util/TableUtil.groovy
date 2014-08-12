@@ -46,4 +46,16 @@ class TableUtil {
         }
         return maps
     }
+
+    static Map<String,Object> dataTableToMapFromSourceMap(DataTable table, Map<String,Object> sourceMap) {
+        List<String> keys = table.topCells()
+        List<List<String>> cells = table.cells(1)
+        assert cells.size() == 1
+        List<String> row = cells[0]
+        Map<String,Object> result = [:]
+        for(int i = 0; i < keys.size(); i++) {
+            result[lowerCaseToCamelCase(keys[i])] = sourceMap[lowerCaseToCamelCase(row[i])]
+        }
+        result
+    }
 }

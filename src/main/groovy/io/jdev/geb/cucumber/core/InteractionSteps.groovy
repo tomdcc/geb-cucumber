@@ -206,4 +206,24 @@ class InteractionSteps extends StepsBase {
         }
         false
     }
+
+    void enterFromVariable(String fieldDesc, String varName, DataTable dataTable) {
+        def module = fieldFinder.findField(fieldDesc, browser.page)
+        assert module
+        Map<String,Object> mapVar = variableScope.decodeVariable(varName)
+        assert mapVar
+        def data = TableUtil.dataTableToMapFromSourceMap(dataTable, mapVar)
+        enterTargetValues(module, data)
+    }
+
+    void hasValuesFromVariable(boolean wait, String fieldDesc, String varName, DataTable dataTable) {
+        Map<String,Object> mapVar = variableScope.decodeVariable(varName)
+        assert mapVar
+        def data = TableUtil.dataTableToMapFromSourceMap(dataTable, mapVar)
+        runWithOptionalWait(wait) {
+            def target = getOptionalTarget(fieldDesc)
+            targetHasValues(target, data)
+        }
+    }
+
 }

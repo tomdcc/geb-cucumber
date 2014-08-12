@@ -58,6 +58,10 @@ When(~/^I enter the following values in(?:to)? the (.*) section:$/) { String fie
     steps.enterValues(fieldDesc, dataTable)
 }
 
+When(~/^I enter the following values in(?:to)? the (.*) section from (the (?:.*)):/) { String fieldDesc, String varName, DataTable dataTable ->
+    steps.enterFromVariable(fieldDesc, varName, dataTable)
+}
+
 Then(~/^(eventually )?the (.*?)(?: field| label)? (?:matches |has (?:the )?value (?:of )?)(.*)$/) { String eventually, String fieldDesc, String value ->
     steps.hasValue(eventually as boolean, value, fieldDesc)
 }
@@ -96,6 +100,10 @@ Then(~/^(eventually )?the page has the following values:$/) { String eventually,
 
 Then(~/^(eventually )?the (.*) section has the following values:$/) { String eventually, String fieldDesc, DataTable dataTable ->
     steps.hasValues(eventually as boolean, fieldDesc, dataTable)
+}
+
+Then(~/^(eventually )?the (.*) section has the following values from (the (?:.*)):$/) { String eventually, String fieldDesc, String varName, DataTable dataTable ->
+    steps.hasValuesFromVariable(eventually as boolean, fieldDesc, varName, dataTable)
 }
 
 Then(~/^(eventually )?the (.*) table has (\d+) rows?$/) { String eventually, String fieldDesc, int rows ->

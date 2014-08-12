@@ -68,6 +68,10 @@ by appending `<section name> section` to the field definition, so e.g.
 `billing address section state` is mapped to the `state` property in the
 module returned by the page's `billingAddress` content.
 
+It is also possible to enter multiple values into a module and verify multiple
+values inside a module at once using cucumber table syntax, for more readable
+tests.
+
 ### Tables
 
 It is possible to verify that a table, implemented in the page model as a list
@@ -84,6 +88,10 @@ will wrap the verification in a Geb `waitFor` block.
 Changelog
 ---------
 
+#### Version 0.3
+ - Enter values into a module and and verify values in a module from a variable
+   which is a map
+ 
 #### Version 0.2
  - Make select box value retrieval work in Geb 0.9.3
  - Miscellaneous fixes to allow easier integration of code with application-specific steps

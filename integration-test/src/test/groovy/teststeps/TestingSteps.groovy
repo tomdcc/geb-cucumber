@@ -26,6 +26,7 @@
 
 package teststeps
 
+import cucumber.api.DataTable
 import cucumber.api.Scenario
 import io.jdev.cucumber.variables.core.BasicSteps
 import io.jdev.cucumber.variables.en.EnglishDecoder
@@ -36,6 +37,7 @@ import java.util.regex.Pattern
 
 import static cucumber.api.groovy.Hooks.Before
 import static cucumber.api.groovy.Hooks.After
+import static cucumber.api.groovy.EN.Given
 import static cucumber.api.groovy.EN.Then
 
 def steps = new BasicSteps()
@@ -69,3 +71,13 @@ Then(~/^\(test\) (the .*) variable (.*) nested field has (?:the )?value (?:of )?
         assert expectedValue == actualValue
     }
 }
+
+Given(~/^the (.*) map variable has the following values:$/) { String name, DataTable dataTable ->
+    List<Map<String,String>> maps = dataTable.asMaps(String, String)
+    assert maps.size() == 1
+    Map<String,String> data = maps[0].collectEntries { String key, String value ->
+        [fieldFinder.fieldDescriptionToFieldName(key), steps.getVariable(value)]
+    }
+    steps.setVariable(name, data)
+}
+
