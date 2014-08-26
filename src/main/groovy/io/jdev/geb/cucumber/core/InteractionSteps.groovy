@@ -79,6 +79,7 @@ class InteractionSteps extends StepsBase {
         runWithOptionalWait(wait) {
             def field = fieldFinder.findField(fieldDesc, browser.page)
             ValueUtil.hasValue(field, value)
+            true
         }
     }
 
@@ -89,6 +90,7 @@ class InteractionSteps extends StepsBase {
         runWithOptionalWait(wait) {
             def target = getOptionalTarget(fieldDesc)
             targetHasValues(target, vals.first())
+            true
         }
     }
 
@@ -106,44 +108,50 @@ class InteractionSteps extends StepsBase {
     }
 
     void isChecked(boolean wait, String fieldDesc) {
-        assert runWithOptionalWait(wait) {
+        runWithOptionalWait(wait) {
             def field = fieldFinder.findField(fieldDesc, browser.page)
-            field.value() != false
+            assert field.value() != false
+            true
         }
     }
 
     void isNotChecked(boolean wait, String fieldDesc) {
-        assert runWithOptionalWait(wait) {
+        runWithOptionalWait(wait) {
             def field = fieldFinder.findField(fieldDesc, browser.page)
-            field.value() == false
+            assert field.value() == false
+            true
         }
     }
 
     void isPresent(boolean wait, String fieldDesc) {
-        assert runWithOptionalWait(wait) {
+        runWithOptionalWait(wait) {
             def field = fieldFinder.findField(fieldDesc, browser.page)
-            field
+            assert field != null
+            true
         }
     }
 
     void isNotPresent(boolean wait, String fieldDesc) {
-        assert runWithOptionalWait(wait) {
+        runWithOptionalWait(wait) {
             def field = fieldFinder.findField(fieldDesc, browser.page)
-            !field
+            assert !field
+            true
         }
     }
 
     void isVisible(boolean wait, String fieldDesc) {
-        assert runWithOptionalWait(wait) {
+        runWithOptionalWait(wait) {
             def field = fieldFinder.findField(fieldDesc, browser.page)
-            field.displayed
+            assert field.displayed
+            true
         }
     }
 
     void isNotVisible(boolean wait, String fieldDesc) {
-        assert runWithOptionalWait(wait) {
+        runWithOptionalWait(wait) {
             def field = fieldFinder.findField(fieldDesc, browser.page)
-            !field.displayed
+            assert !field.displayed
+            true
         }
     }
 
@@ -223,6 +231,7 @@ class InteractionSteps extends StepsBase {
         runWithOptionalWait(wait) {
             def target = getOptionalTarget(fieldDesc)
             targetHasValues(target, data)
+            true
         }
     }
 

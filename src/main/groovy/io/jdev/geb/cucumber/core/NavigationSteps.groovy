@@ -86,8 +86,9 @@ class NavigationSteps extends StepsBase {
     public void at(boolean wait, String pageName) {
         Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
         assert pageClass
-        assert runWithOptionalWait(wait) {
-            browser.at(pageClass)
+        runWithOptionalWait(wait) {
+            assert browser.at(pageClass)
+            true
         }
     }
 
@@ -113,8 +114,9 @@ class NavigationSteps extends StepsBase {
 
     public void atPath(boolean wait, String path) {
         String expectedUrl = buildUrl(path)
-        assert runWithOptionalWait(wait) {
-            browser.driver.currentUrl == expectedUrl
+        runWithOptionalWait(wait) {
+            assert browser.driver.currentUrl == expectedUrl
+            true
         }
     }
 
