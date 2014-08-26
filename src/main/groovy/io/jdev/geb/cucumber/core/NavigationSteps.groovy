@@ -51,15 +51,18 @@ class NavigationSteps extends StepsBase {
         cleanupWindows()
     }
 
-    public void to(String pageName, Map params = [:]) {
+    private Class<? extends Page> getAndAssertPageClass(String pageName) {
         Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
-        assert pageClass
-        browser.to(params, pageClass)
+        assert pageClass, "Could not find page class for page name $pageName"
+        return pageClass
+    }
+
+    public void to(String pageName, Map params = [:]) {
+        browser.to(params, getAndAssertPageClass(pageName))
     }
 
     public void to(String pageName, String niceParamName, String paramRawValue) {
-        Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
-        assert pageClass
+        Class<? extends Page> pageClass = getAndAssertPageClass(pageName)
         browser.to(getNiceParams(pageClass, niceParamName, paramRawValue), pageClass)
     }
 
@@ -68,14 +71,11 @@ class NavigationSteps extends StepsBase {
     }
 
     public void via(String pageName, Map params = [:]) {
-        Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
-        assert pageClass
-        browser.via(params, pageClass)
+        browser.via(params, getAndAssertPageClass(pageName))
     }
 
     public void via(String pageName, String niceParamName, String paramRawValue) {
-        Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
-        assert pageClass
+        Class<? extends Page> pageClass = getAndAssertPageClass(pageName)
         browser.via(getNiceParams(pageClass, niceParamName, paramRawValue), pageClass)
     }
 
@@ -84,8 +84,7 @@ class NavigationSteps extends StepsBase {
     }
 
     public void at(boolean wait, String pageName) {
-        Class<? extends Page> pageClass = pageFinder.getPageClass(pageName)
-        assert pageClass
+        Class<? extends Page> pageClass = getAndAssertPageClass(pageName)
         runWithOptionalWait(wait) {
             assert browser.at(pageClass)
             true
@@ -115,7 +114,8 @@ class NavigationSteps extends StepsBase {
     public void atPath(boolean wait, String path) {
         String expectedUrl = buildUrl(path)
         runWithOptionalWait(wait) {
-            assert browser.driver.currentUrl == expectedUrl
+            String currentUrl = browser.driver.currentUrl
+            assert currentUrl == expectedUrl
             true
         }
     }
@@ -153,7 +153,10 @@ class NavigationSteps extends StepsBase {
             throw new IllegalStateException("Previous main window handle set but doesn't match current window handle - nested popups not currently supported")
         }
         mainWindowHandle = browser.driver.windowHandle
-        browser.waitFor { browser.driver.windowHandles.size() > 1 }
+        browser.waitFor {
+            assert browser.driver.windowHandles.size() > 1, "Second window not found"
+            true
+        }
     }
 
     public void switchToPopup(String pageName) {
@@ -167,7 +170,10 @@ class NavigationSteps extends StepsBase {
 
     public void popupClosed() {
         browser.driver.switchTo().window(mainWindowHandle)
-        browser.waitFor { browser.driver.windowHandles.size() == 1 }
+        browser.waitFor {
+            assert browser.driver.windowHandles.size() == 1, "Second window still present"
+            true
+        }
     }
 
     public void closePopup() {
@@ -202,15 +208,20 @@ class NavigationSteps extends StepsBase {
     }
 
     public void hasAlert(String rawAlertMessage) {
-        currentAlert = (Alert) browser.waitFor { browser.driver.switchTo().alert() }
+        currentAlert = (Alert) browser.waitFor {
+            def alert = browser.driver.switchTo().alert()
+            assert alert, "No alert appeared"
+            alert
+        }
         if(rawAlertMessage) {
             String expectedAlertMessage = variableScope.decodeVariable(rawAlertMessage) as String
-            assert currentAlert.text == expectedAlertMessage
+            String currentAlertText = currentAlert.text
+            assert currentAlertText == expectedAlertMessage
         }
     }
 
     public void enterAlertPrompt(String value) {
-        assert currentAlert
+        assert currentAlert, "No prompt to enter text into"
         currentAlert.sendKeys(variableScope.decodeVariable(value) as String)
     }
 

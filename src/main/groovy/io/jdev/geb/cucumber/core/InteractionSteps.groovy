@@ -51,7 +51,8 @@ class InteractionSteps extends StepsBase {
     void enterValues(String fieldDesc, DataTable dataTable) {
         def target = getOptionalTarget(fieldDesc)
         List<Map<String,Object>> vals = TableUtil.dataTableToMaps(variableScope, dataTable, false)
-        assert vals.size() == 1, "Cannot enter more than 1 row when entering multiple values"
+        int numberOfRows = vals.size()
+        assert numberOfRows == 1, "Cannot enter more than 1 row when entering multiple values"
         enterTargetValues(target, vals.first())
     }
 
@@ -184,7 +185,7 @@ class InteractionSteps extends StepsBase {
             def table = fieldFinder.findField(fieldDesc, browser.page)
             for(Map<String,Object> expectedRow : expectedRows) {
                 def row = hasRowMatching(table, expectedRow)
-                assert row
+                assert row, "Could not find a matching row"
                 // store
                 variableScope.storeVariable(matchingRowVarName, row)
             }
@@ -219,14 +220,14 @@ class InteractionSteps extends StepsBase {
         def target = getOptionalTarget(fieldDesc)
         assert target
         Map<String,Object> mapVar = variableScope.decodeVariable(varName)
-        assert mapVar
+        assert mapVar, "Could not find a variable with name [$varName]"
         def data = TableUtil.dataTableToMapFromSourceMap(dataTable, mapVar)
         enterTargetValues(target, data)
     }
 
     void hasValuesFromVariable(boolean wait, String fieldDesc, String varName, DataTable dataTable) {
         Map<String,Object> mapVar = variableScope.decodeVariable(varName)
-        assert mapVar
+        assert mapVar, "Could not find a variable with name [$varName]"
         def data = TableUtil.dataTableToMapFromSourceMap(dataTable, mapVar)
         runWithOptionalWait(wait) {
             def target = getOptionalTarget(fieldDesc)

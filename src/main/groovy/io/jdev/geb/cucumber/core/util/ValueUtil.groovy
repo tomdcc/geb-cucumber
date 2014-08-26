@@ -53,18 +53,21 @@ class ValueUtil {
         }
     }
 
-    static void hasValue(def field, def expectedValue) {
-        if(expectedValue instanceof CheckedDecoder.CheckedState) {
+    static void hasValue(def field, def expectedValueObj) {
+        if(expectedValueObj instanceof CheckedDecoder.CheckedState) {
             boolean isChecked = field.value() != false
-            boolean wantChecked = expectedValue == CheckedDecoder.CheckedState.checked
+            boolean wantChecked = expectedValueObj == CheckedDecoder.CheckedState.checked
             assert isChecked == wantChecked
         } else {
             String fieldValue = getValue(field)
-            if(expectedValue instanceof Pattern) {
-                assert expectedValue.matcher(fieldValue).matches()
+            // separate vars here just to give nicer assert messages on failure
+            if(expectedValueObj instanceof Pattern) {
+                Pattern expectedPattern = expectedValueObj
+                assert fieldValue ==~ expectedPattern
             } else {
                 // simple string equality
-                assert fieldValue == expectedValue as String
+                String expectedValue = expectedValueObj as String
+                assert fieldValue == expectedValue
             }
         }
     }
