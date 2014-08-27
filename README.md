@@ -32,7 +32,7 @@ Geb Cucumber is deployed to Maven Central and can be added to your project as a 
 
     groupId: io.jdev.geb
     artifactId: geb-cucumber
-    version: 0.2
+    version: 0.3
 
 Or just download the jar from http://search.maven.org/ if your build system is a bit less connected.
 
@@ -89,9 +89,10 @@ Changelog
 ---------
 
 #### Version 0.3
- - Enter values into a module and and verify values in a module from a variable
-   which is a map
- 
+ - Enter values into a module or the page and verify values in a module from a
+   variable which is a map
+ - Fix assertions to give more meaningful, cleaner errors
+
 #### Version 0.2
  - Make select box value retrieval work in Geb 0.9.3
  - Miscellaneous fixes to allow easier integration of code with application-specific steps
