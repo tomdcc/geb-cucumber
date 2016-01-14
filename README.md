@@ -10,7 +10,7 @@ Example:
 Scenario: Log in and smell the roses                           # equivalent geb groovy commands below
 Given a customer                                               # insert into db and save some some variables
 When I go to the login page                                    # to LoginPage
-And I enter the following details:                             # username.value(<the customer username>)
+And I enter the following values:                              # username.value(<the customer username>)
   | username              | password        | remember me |    # password.value('some password')
   | the customer username | 'some password' | checked     |    # rememberMe.click()
 And I click the login button                                   # loginButton.click()
